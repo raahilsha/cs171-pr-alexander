@@ -63,7 +63,7 @@
             }
 
             // call this function after both files are loaded -- error should be "null" if no error
-            var dataLoaded = function (error, _world)
+            var dataLoaded = function (error, _world, _rankings)
             {
                 if (!error)
                 {
@@ -77,6 +77,7 @@
             {
                 queue()
                     .defer(d3.json, 'data/world-topo-min.json')
+                    .defer(d3.json, 'data/power_rank.json')
                     .await(dataLoaded);
             }
 
