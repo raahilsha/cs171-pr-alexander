@@ -86,7 +86,7 @@ MapVis.prototype.initVis = function()
 }
 
 
-CountVis.prototype.wrangleData= function()
+MapVis.prototype.wrangleData= function()
 {
     this.displayData = this.data;
 }
@@ -95,7 +95,7 @@ CountVis.prototype.wrangleData= function()
  * the drawing function - should use the D3 selection, enter, exit
  * @param _options -- only needed if different kinds of updates are needed
  */
-CountVis.prototype.updateVis = function()
+MapVis.prototype.updateVis = function()
 {
     this.x.domain(d3.extent(this.displayData, function(d) { return d.time; }));
     this.y.domain(d3.extent(this.displayData, function(d) { return d.count; }));
@@ -130,7 +130,7 @@ CountVis.prototype.updateVis = function()
  * be defined here.
  * @param selection
  */
-CountVis.prototype.onSelectionChange = function (selectionStart, selectionEnd)
+MapVis.prototype.onSelectionChange = function (selectionStart, selectionEnd)
 {
     this.wrangleData(function(d) { return d.type == type; });
 }
@@ -148,7 +148,7 @@ var getInnerWidth = function(element)
  * creates the y axis slider
  * @param svg -- the svg element
  */
-CountVis.prototype.addSlider = function(svg){
+MapVis.prototype.addSlider = function(svg){
     var that = this;
     var sliderHeight = that.height - 20;
     var sliderScale = d3.scale.linear().domain([0,sliderHeight]).range([0,sliderHeight]);
@@ -203,7 +203,7 @@ CountVis.prototype.addSlider = function(svg){
     }).call(sliderDragBehaviour)
 }
 
-CountVis.prototype.resetSlider = function()
+MapVis.prototype.resetSlider = function()
 {
     var sliderHeight = this.height - 20;
     d3.select(".sliderHandle").attr({y:sliderHeight});
@@ -218,7 +218,7 @@ CountVis.prototype.resetSlider = function()
     this.updateVis();
 }
 
-CountVis.prototype.filterAndAggregate = function(_filter)
+MapVis.prototype.filterAndAggregate = function(_filter)
 {
     var filter = function(){return true;}
     if (_filter != null){
