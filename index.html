@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>Alexander: The What If? of History</title>
+
+    <!-- ADD Libraries-->
+    <script src="libs/d3/d3.min.js" charset="utf-8"></script>
+    <script src="libs/topojson/topojson.v1.min.js"></script>
+    <script src="http://d3js.org/queue.v1.min.js"></script>
+    <script src="libs/jquery/jquery-2.1.1.min.js" charset="utf-8"></script>
+    <script src="libs/bootstrap/js/bootstrap.min.js" charset="utf-8"></script>
+
+    <!--Stylesheets-->
+    <link rel="stylesheet" type="text/css" href="libs/bootstrap/css/bootstrap.min.css">
+
+    <!-- Get some nice font-->
+    <link href='http://fonts.googleapis.com/css?family=PT+Sans:400,700' rel='stylesheet' type='text/css'>
+
+    <!-- add own vis classes-->
+    <script src = "js/mapvis.js"></script>
+
+    <!-- add own stylesheet-->
+    <link rel="stylesheet" type="text/css" href="css/myStyle.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Alexander: The <i>What If?</i> of History</h1>
+        <div class="row">
+            <div class="col-md-9" id="mapVis">
+            </div>
+            <div class="col-md-3" id="ageVis">
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12" id="prioVis">
+            </div>
+
+        </div>
+    </div>
+
+
+    <script>
+        $(function()
+        {
+            // variables keeping global knowledge of the data
+            var countries_map;
+
+            var initVis = function()
+            {
+                var MyEventHandler = new Object();
+
+                map_vis = new MapVis(d3.select("#mapVis"), countries_map, MyEventHandler)
+
+                $(MyEventHandler).bind("countryChanged", function(event, argument)
+                {
+                    // var beginTime = argument.extent()[0];
+                    // var endTime = argument.extent()[1];
+
+                    // age_vis.onSelectionChange(beginTime, endTime);
+                    // prio_vis.onSelectionChange(beginTime, endTime);
+                });
+            }
+
+            // call this function after both files are loaded -- error should be "null" if no error
+            var dataLoaded = function (error, _world)
+            {
+                if (!error)
+                {
+                    countries_map = topojson.feature(_world, _world.objects.countries).features;
+
+                    initVis();
+                }
+            }
+
+            var startHere = function()
+            {
+                queue()
+                    .defer(d3.json, 'data/world-topo-min.json')
+                    .await(dataLoaded);
+            }
+
+            startHere();
+        })
+    </script>
+</body>
+</html>
