@@ -27,59 +27,19 @@ MapVis.prototype.initVis = function()
 {
     var that = this;
 
+    this.projection = d3.geo.mercator()
+        .translate([this.width / 2, this.height / 2])
+        .scale(this.width / 2 / Math.PI);
+
+    this.path = d3.geo.path().projection(projection);
+
     this.svg = this.parentElement.append("svg")
-        .attr("width", this.width + this.margin.left + this.margin.right)
-        .attr("height", this.height + this.margin.top + this.margin.bottom)
-      .append("g")
-        .attr("transform", "translate(" + this.margin.left + "," + this.margin.top + ")");
+        .attr("width", width)
+        .attr("height", height)
+        .on("click", click)
+        .append("g");
 
-    // creates axis and scales
-    this.x = d3.time.scale()
-      .range([0, this.width]);
-
-    this.y = d3.scale.linear()
-      .range([this.height, 0]);
-
-    this.xAxis = d3.svg.axis()
-      .scale(this.x)
-      .orient("bottom");
-
-    this.yAxis = d3.svg.axis()
-      .scale(this.y)
-      .orient("left");
-      
-    this.area = d3.svg.area()
-      .interpolate("monotone")
-      .x(function(d) { return that.x(d.time); })
-      .y0(this.height)
-      .y1(function(d) { return that.y(d.count); });
-
-    this.brush = d3.svg.brush()
-      .on("brush", function(){
-        // Trigger selectionChanged event. You'd need to account for filtering by time AND type
-        $(that.eventHandler).trigger("selectionChanged", that.brush);
-      });
-
-    // Add axes visual elements
-    this.svg.append("g")
-        .attr("class", "x axis")
-        .attr("transform", "translate(0," + this.height + ")")
-
-    this.svg.append("g")
-        .attr("class", "y axis")
-      .append("text")
-        .attr("transform", "rotate(-90)")
-        .attr("y", 6)
-        .attr("dy", ".71em")
-        .style("text-anchor", "end")
-        .text("Call volume, daily");
-
-    this.svg.append("g")
-      .attr("class", "brush");
-
-    this.svg.append("path").attr("class", "area");
-    this.svg = this.parentElement.select("svg");
-    this.addSlider(this.svg);
+    this.g = svg.append("g");
 
     this.wrangleData();
     this.updateVis();
@@ -88,7 +48,6 @@ MapVis.prototype.initVis = function()
 
 MapVis.prototype.wrangleData= function()
 {
-    this.displayData = this.data;
 }
 
 /**
@@ -97,31 +56,19 @@ MapVis.prototype.wrangleData= function()
  */
 MapVis.prototype.updateVis = function()
 {
-    this.x.domain(d3.extent(this.displayData, function(d) { return d.time; }));
-    this.y.domain(d3.extent(this.displayData, function(d) { return d.count; }));
-    // updates axis
-    this.svg.select(".x.axis")
-        .call(this.xAxis);
-    this.svg.select(".y.axis")
-        .call(this.yAxis)
+    that = this;
 
-    // updates graph
-    var path = this.svg.selectAll(".area")
-      .data([this.displayData])
-    path.enter()
-      .append("path")
-      .attr("class", "area");
-    path
-      .transition()
-      .attr("d", this.area);
-    path.exit()
-      .remove();
+    this.svg.append("path")
+        .datum(that.graticule)
+        .attr("class", "graticule")
+        .attr("d", path);
 
-    this.brush.x(this.x);
-    this.svg.select(".brush")
-        .call(this.brush)
-      .selectAll("rect")
-        .attr("height", this.height);
+    this.g.append("path")
+        .datum({type: "LineString", coordinates: [[-180, 0], [-90, 0], [0, 0], [90, 0], [180, 0]]})
+        .attr("class", "equator")
+        .attr("d", path);
+
+    this.country = g.selectAll(".country").data(that.topo);
 }
 
 /**

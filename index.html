@@ -85,7 +85,7 @@
             {
                 queue()
                     .defer(d3.json, 'data/world-topo-min.json')
-                    .defer(d3.json, 'data/power-rank.json')
+                    // .defer(d3.json, 'data/power-rank.json')
                     .await(dataLoaded);
             }
 
