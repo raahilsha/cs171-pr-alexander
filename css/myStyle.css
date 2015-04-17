@@ -7,6 +7,11 @@ body
     font: 10px sans-serif;
 }
 
+.maintitle
+{
+    text-align: center;
+}
+
 .axis line,
 .axis path 
 {
@@ -44,12 +49,14 @@ body
 
 svg.mapSvg
 {
-  margin:10px 10%;
-  border:2px solid #000;
-  border-radius: 5px;
-  height:100%;
-  overflow:hidden;
-  background: #F0F8FF;
+    position: absolute;
+    right: 230px;
+    margin:10px 10%;
+    border:2px solid #000;
+    border-radius: 5px;
+    height: 600px;
+    overflow:hidden;
+    background: #F0F8FF;
 }
 
 .hidden 

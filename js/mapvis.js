@@ -11,10 +11,13 @@ MapVis = function(_parentElement, _countriesData, _eventHandler)
 
     this.margin = {top: 20, right: 0, bottom: 30, left: 70},
     this.width = getInnerWidth(this.parentElement) - this.margin.left - this.margin.right,
-    this.height = 400 - this.margin.top - this.margin.bottom;
+    this.height = 500 - this.margin.top - this.margin.bottom;
 
     this.graticule = d3.geo.graticule();
     this.tooltip = this.parentElement.append("div").attr("class", "tooltip hidden");
+
+    this.offsetL = 430;
+    this.offsetT = 80;
 
     this.initVis();
 }
@@ -29,9 +32,13 @@ MapVis.prototype.initVis = function()
 
     this.projection = d3.geo.mercator()
         .translate([that.width / 2, that.height / 2])
+        .center([0, 45])
         .scale(that.width / 2 / Math.PI);
 
     this.path = d3.geo.path().projection(that.projection);
+
+    this.parentElement
+        .attr("transform", "translate(" + -500 + "," + 0 + ")")
 
     this.svg = this.parentElement.append("svg")
         .attr("width", that.width)
@@ -78,9 +85,6 @@ MapVis.prototype.updateVis = function()
       .attr("title", function(d,i) { return d.properties.name; })
       .style("fill", function(d, i) { return d.properties.color; });
 
-    this.offsetL = 120;
-    this.offsetT = 10;
-
     this.country.on("mousemove", function(d,i) {
         var mouse = d3.mouse(that.svg.node()).map(function(d) { return parseInt(d); });
 
@@ -90,6 +94,9 @@ MapVis.prototype.updateVis = function()
     })
     .on("mouseout", function(d,i) {
         that.tooltip.classed("hidden", true);
+    })
+    .on("click", function(d,i) {
+        console.log(d.properties.name);
     });
 
 }
@@ -100,9 +107,8 @@ MapVis.prototype.updateVis = function()
  * be defined here.
  * @param selection
  */
-MapVis.prototype.onSelectionChange = function (selectionStart, selectionEnd)
+MapVis.prototype.onSelectionChange = function ()
 {
-    this.wrangleData(function(d) { return d.type == type; });
 }
 
 /**
@@ -112,91 +118,4 @@ var getInnerWidth = function(element)
 {
     var style = window.getComputedStyle(element.node(), null);
     return parseInt(style.getPropertyValue('width'));
-}
-
-/**
- * creates the y axis slider
- * @param svg -- the svg element
- */
-MapVis.prototype.addSlider = function(svg){
-    var that = this;
-    var sliderHeight = that.height - 20;
-    var sliderScale = d3.scale.linear().domain([0,sliderHeight]).range([0,sliderHeight]);
-
-    var sliderDragged = function()
-    {
-        var value = Math.max(0, Math.min(sliderHeight,d3.event.y));
-        var sliderValue = sliderScale.invert(value);
-
-        if (sliderValue == 0)
-            sliderValue = .1;
-
-        that.y = d3.scale.pow().exponent(sliderValue / sliderHeight).range([that.height, 0]);
-          
-        that.yAxis = d3.svg.axis()
-          .scale(that.y)
-          .orient("left");
-          
-        d3.select(this)
-            .attr("y", function () {
-                return sliderScale(sliderValue);
-            })
-        that.updateVis({});
-    }
-
-    var sliderDragBehaviour = d3.behavior.drag()
-        .on("drag", sliderDragged)
-
-    var sliderGroup = svg.append("g").attr({
-        class:"sliderGroup",
-        "transform":"translate("+0+","+30+")"
-    })
-
-    sliderGroup.append("rect").attr({
-        class:"sliderBg",
-        x:5,
-        width:10,
-        height:sliderHeight
-    }).style({
-        fill:"lightgray"
-    })
-
-    sliderGroup.append("rect").attr({
-        "class":"sliderHandle",
-        y:sliderHeight,
-        width:20,
-        height:10,
-        rx:2,
-        ry:2
-    }).style({
-        fill:"#333333"
-    }).call(sliderDragBehaviour)
-}
-
-MapVis.prototype.resetSlider = function()
-{
-    var sliderHeight = this.height - 20;
-    d3.select(".sliderHandle").attr({y:sliderHeight});
-
-    this.y = d3.scale.linear()
-      .range([this.height, 0]);
-      
-    this.yAxis = d3.svg.axis()
-      .scale(this.y)
-      .orient("left");
-
-    this.updateVis();
-}
-
-MapVis.prototype.filterAndAggregate = function(_filter)
-{
-    var filter = function(){return true;}
-    if (_filter != null){
-        filter = _filter;
-    }
-
-    return this.data.map(function(d)
-    { 
-        return {date: d.date, calls: d.calls.filter(filter)};
-    });
 }
