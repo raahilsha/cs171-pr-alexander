@@ -41,10 +41,11 @@
 
 
     <script>
+        // variables keeping global knowledge of the data
+        var countries_map;
+
         $(function()
         {
-            // variables keeping global knowledge of the data
-            var countries_map;
 
             var initVis = function()
             {
@@ -63,7 +64,7 @@
             }
 
             // call this function after both files are loaded -- error should be "null" if no error
-            var dataLoaded = function (error, _world, _rankings)
+            var dataLoaded = function (error, _world, _powerrank)
             {
                 if (!error)
                 {
@@ -71,13 +72,18 @@
 
                     initVis();
                 }
+                else
+                {
+                    console.log("Error Loading Data");
+                    console.log(error);
+                }
             }
 
             var startHere = function()
             {
                 queue()
                     .defer(d3.json, 'data/world-topo-min.json')
-                    .defer(d3.json, 'data/power_rank.json')
+                    .defer(d3.json, 'data/power-rank.json')
                     .await(dataLoaded);
             }
 
