@@ -42,7 +42,7 @@ body
   text-transform:capitalize;
 }
 
-#container 
+svg.mapSvg
 {
   margin:10px 10%;
   border:2px solid #000;

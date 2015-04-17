@@ -28,25 +28,26 @@ MapVis.prototype.initVis = function()
     var that = this;
 
     this.projection = d3.geo.mercator()
-        .translate([this.width / 2, this.height / 2])
-        .scale(this.width / 2 / Math.PI);
+        .translate([that.width / 2, that.height / 2])
+        .scale(that.width / 2 / Math.PI);
 
-    this.path = d3.geo.path().projection(projection);
+    this.path = d3.geo.path().projection(that.projection);
 
     this.svg = this.parentElement.append("svg")
-        .attr("width", width)
-        .attr("height", height)
-        .on("click", click)
+        .attr("width", that.width)
+        .attr("height", that.height)
+        .attr("class", "mapSvg")
+        // .on("click", click)
         .append("g");
 
-    this.g = svg.append("g");
+    this.g = this.svg.append("g");
 
     this.wrangleData();
     this.updateVis();
 }
 
 
-MapVis.prototype.wrangleData= function()
+MapVis.prototype.wrangleData = function()
 {
 }
 
@@ -61,14 +62,36 @@ MapVis.prototype.updateVis = function()
     this.svg.append("path")
         .datum(that.graticule)
         .attr("class", "graticule")
-        .attr("d", path);
+        .attr("d", that.path);
 
     this.g.append("path")
         .datum({type: "LineString", coordinates: [[-180, 0], [-90, 0], [0, 0], [90, 0], [180, 0]]})
         .attr("class", "equator")
-        .attr("d", path);
+        .attr("d", that.path);
 
-    this.country = g.selectAll(".country").data(that.topo);
+    this.country = this.g.selectAll(".country").data(that.topo);
+
+    this.country.enter().insert("path")
+      .attr("class", "country")
+      .attr("d", that.path)
+      .attr("id", function(d,i) { return d.id; })
+      .attr("title", function(d,i) { return d.properties.name; })
+      .style("fill", function(d, i) { return d.properties.color; });
+
+    this.offsetL = 120;
+    this.offsetT = 10;
+
+    this.country.on("mousemove", function(d,i) {
+        var mouse = d3.mouse(that.svg.node()).map(function(d) { return parseInt(d); });
+
+        that.tooltip.classed("hidden", false)
+            .attr("style", "left:"+(mouse[0]+that.offsetL)+"px;top:"+(mouse[1]+that.offsetT)+"px")
+            .html(d.properties.name);
+    })
+    .on("mouseout", function(d,i) {
+        that.tooltip.classed("hidden", true);
+    });
+
 }
 
 /**

@@ -51,7 +51,7 @@
             {
                 var MyEventHandler = new Object();
 
-                map_vis = new MapVis(d3.select("#mapVis"), countries_map, MyEventHandler)
+                map_vis = new MapVis(d3.select("#mapVis"), countries_map, MyEventHandler);
 
                 $(MyEventHandler).bind("countryChanged", function(event, argument)
                 {
@@ -70,8 +70,6 @@
                 {
                     countries_map = topojson.feature(_world, _world.objects.countries).features;
 
-                    console.log(_powerrank);
-
                     initVis();
                 }
                 else
@@ -85,7 +83,7 @@
             {
                 queue()
                     .defer(d3.json, 'data/world-topo-min.json')
-                    // .defer(d3.json, 'data/power-rank.json')
+                    .defer(d3.json, 'data/power-rank.json')
                     .await(dataLoaded);
             }
 
