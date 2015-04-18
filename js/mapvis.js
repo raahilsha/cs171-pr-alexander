@@ -24,25 +24,25 @@ MapVis = function(_parentElement, _countriesData, _eventHandler)
 
 
 /**
- * Method that sets up the SVG and the variables
+ * Method thatm sets up the SVG and the variables
  */
 MapVis.prototype.initVis = function()
 {
-    var that = this;
+    var thatm = this;
 
     this.projection = d3.geo.mercator()
-        .translate([that.width / 2, that.height / 2])
+        .translate([thatm.width / 2, thatm.height / 2])
         .center([0, 45])
-        .scale(that.width / 2 / Math.PI);
+        .scale(thatm.width / 2 / Math.PI);
 
-    this.path = d3.geo.path().projection(that.projection);
+    this.path = d3.geo.path().projection(thatm.projection);
 
     this.parentElement
         .attr("transform", "translate(" + -500 + "," + 0 + ")")
 
     this.svg = this.parentElement.append("svg")
-        .attr("width", that.width)
-        .attr("height", that.height)
+        .attr("width", thatm.width)
+        .attr("height", thatm.height)
         .attr("class", "mapSvg")
         // .on("click", click)
         .append("g");
@@ -64,39 +64,39 @@ MapVis.prototype.wrangleData = function()
  */
 MapVis.prototype.updateVis = function()
 {
-    that = this;
+    thatm = this;
 
     this.svg.append("path")
-        .datum(that.graticule)
+        .datum(thatm.graticule)
         .attr("class", "graticule")
-        .attr("d", that.path);
+        .attr("d", thatm.path);
 
     this.g.append("path")
         .datum({type: "LineString", coordinates: [[-180, 0], [-90, 0], [0, 0], [90, 0], [180, 0]]})
         .attr("class", "equator")
-        .attr("d", that.path);
+        .attr("d", thatm.path);
 
-    this.country = this.g.selectAll(".country").data(that.topo);
+    this.country = this.g.selectAll(".country").data(thatm.topo);
 
     this.country.enter().insert("path")
       .attr("class", "country")
-      .attr("d", that.path)
+      .attr("d", thatm.path)
       .attr("id", function(d,i) { return d.id; })
       .attr("title", function(d,i) { return d.properties.name; })
       .style("fill", function(d, i) { return d.properties.color; });
 
     this.country.on("mousemove", function(d,i) {
-        var mouse = d3.mouse(that.svg.node()).map(function(d) { return parseInt(d); });
+        var mouse = d3.mouse(thatm.svg.node()).map(function(d) { return parseInt(d); });
 
-        that.tooltip.classed("hidden", false)
-            .attr("style", "left:"+(mouse[0]+that.offsetL)+"px;top:"+(mouse[1]+that.offsetT)+"px")
+        thatm.tooltip.classed("hidden", false)
+            .attr("style", "left:"+(mouse[0]+thatm.offsetL)+"px;top:"+(mouse[1]+thatm.offsetT)+"px")
             .html(d.properties.name);
     })
     .on("mouseout", function(d,i) {
-        that.tooltip.classed("hidden", true);
+        thatm.tooltip.classed("hidden", true);
     })
     .on("click", function(d,i) {
-        console.log(d.properties.name);
+        console.log(d.properties.name)
     });
 
 }
@@ -112,7 +112,7 @@ MapVis.prototype.onSelectionChange = function ()
 }
 
 /**
- * Helper function that gets the width of a D3 element
+ * Helper function thatm gets the width of a D3 element
  */
 var getInnerWidth = function(element)
 {

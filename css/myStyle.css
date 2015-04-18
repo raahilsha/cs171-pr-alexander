@@ -95,3 +95,10 @@ div.tooltip
   stroke: #ccc;
   stroke-width: 1px;
 }
+
+#barVis
+{
+    position: relative;
+    left: -300px;
+    top: 0;
+}

@@ -19,39 +19,54 @@
 
     <!-- add own vis classes-->
     <script src = "js/mapvis.js"></script>
+    <script src = "js/barvis.js"></script>
 
     <!-- add own stylesheet-->
     <link rel="stylesheet" type="text/css" href="css/myStyle.css">
 </head>
 <body>
     <div class="maintitle"><h1>Alexander: The <i>What If?</i> of War</h1></div>
-
-            Year: <input type="range" min=1816 max=2007 value=2007 id="yearslider" step=1 oninput="updateYear(value)">
-            <span id = "yeartext">2007</span>
-            
-
     <div class="container">
         <div class="row">
+            <div class="col-md-1">&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbspYear:</div>
+            <div class="col-md-10"><input type="range" min=1816 max=2007 value=2007 id="yearslider" step=1 oninput="updateYear(value)"></div>
+            <span id = "yeartext">2007</span>
         </div>
         <div class="row">
             <div class="col-md-15" id="mapVis">
             </div>
-            <div class="col-md-3" id="ageVis">
+            <div id="barVis" class="col-md-3">
             </div>
         </div>
         <div class="row">
-            <div class="col-md-12" id="prioVis">
+            <div class="col-md-4" id="leftVis">
+                <svg width="300" height="330" style="background-color: lightblue">
+                    <text x="50" y="50">Left Selected Country</text>
+                </svg>
             </div>
-
+            <div class="col-md-4" id="compareVis">
+                <svg width="300" height="330" style="background-color: lightcoral">
+                    <text x="50" y="50">Compare Selected Countries</text>
+                </svg>
+            </div>
+            <div class="col-md-4" id="rightVis">
+                <svg width="300" height="330" style="background-color: lightgreen">
+                    <text x="50" y="50">Right Selected Country</text>
+                </svg>
+            </div>
         </div>
     </div>
     <script>
         // variables keeping global knowledge of the data
         var countries_map;
+        var power_ranks;
+        var map_vis;
+        var bar_vis;
 
         function updateYear(year)
         {
             d3.select("#yeartext").text(year + "");
+            bar_vis.wrangleData(year);
         }
 
         $(function()
@@ -63,6 +78,9 @@
 
                 map_vis = new MapVis(d3.select("#mapVis"), countries_map, MyEventHandler);
                 map_vis.updateVis();
+
+                bar_vis = new BarVis(d3.select("#barVis"), power_ranks, MyEventHandler)
+                updateYear(2007);
 
                 $(MyEventHandler).bind("countryChanged", function(event, argument)
                 {
@@ -80,6 +98,7 @@
                 if (!error)
                 {
                     countries_map = topojson.feature(_world, _world.objects.countries).features;
+                    power_ranks = _powerrank;
 
                     initVis();
                 }
