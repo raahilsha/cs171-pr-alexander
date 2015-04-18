@@ -7,6 +7,17 @@ body
     font: 10px sans-serif;
 }
 
+input[type=range]
+{
+  vertical-align: middle;
+  white-space: nowrap;
+}
+
+.maintitle
+{
+    text-align: center;
+}
+
 .axis line,
 .axis path 
 {
@@ -42,14 +53,16 @@ body
   text-transform:capitalize;
 }
 
-#container 
+svg.mapSvg
 {
-  margin:10px 10%;
-  border:2px solid #000;
-  border-radius: 5px;
-  height:100%;
-  overflow:hidden;
-  background: #F0F8FF;
+    position: absolute;
+    right: 230px;
+    margin:10px 10%;
+    border:2px solid #000;
+    border-radius: 5px;
+    height: 600px;
+    overflow:hidden;
+    background: #F0F8FF;
 }
 
 .hidden 
@@ -81,4 +94,11 @@ div.tooltip
 {
   stroke: #ccc;
   stroke-width: 1px;
+}
+
+#barVis
+{
+    position: relative;
+    left: -300px;
+    top: 0;
 }
