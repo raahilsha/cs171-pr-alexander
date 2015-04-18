@@ -66,6 +66,8 @@ MapVis.prototype.updateVis = function()
 {
     thatm = this;
 
+    // Map Code From: http://techslides.com/d3-map-starter-kit
+
     this.svg.append("path")
         .datum(thatm.graticule)
         .attr("class", "graticule")
