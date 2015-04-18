@@ -24,8 +24,15 @@
     <link rel="stylesheet" type="text/css" href="css/myStyle.css">
 </head>
 <body>
-    <div class="maintitle"><h1>Alexander: The <i>What If?</i> of History</h1></div>
+    <div class="maintitle"><h1>Alexander: The <i>What If?</i> of War</h1></div>
+
+            Year: <input type="range" min=1816 max=2007 value=2007 id="yearslider" step=1 oninput="updateYear(value)">
+            <span id = "yeartext">2007</span>
+            
+
     <div class="container">
+        <div class="row">
+        </div>
         <div class="row">
             <div class="col-md-15" id="mapVis">
             </div>
@@ -38,11 +45,14 @@
 
         </div>
     </div>
-
-
     <script>
         // variables keeping global knowledge of the data
         var countries_map;
+
+        function updateYear(year)
+        {
+            d3.select("#yeartext").text(year + "");
+        }
 
         $(function()
         {
