@@ -53,7 +53,7 @@ BarVis.prototype.initVis = function()
                          .attr("y", i * 15 + 50 - 10)
                          .attr("height", 10)
                          .attr("width", 200)
-                         .style("fill", "lightgreen");
+                         .style("fill", "lightcoral");
 
         this.texts.push(newText);
         this.bars.push(newBar);
