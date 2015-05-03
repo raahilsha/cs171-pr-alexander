@@ -82,7 +82,6 @@ BarVis.prototype.wrangleData = function(_year)
 BarVis.prototype.updateVis = function()
 {
     thatb = this;
-    console.log(this.displayData);
 
     for (var i = 0; i < 20; i++)
     {
