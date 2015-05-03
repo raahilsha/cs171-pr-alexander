@@ -9,7 +9,6 @@
     <script src="libs/topojson/topojson.v1.min.js"></script>
     <script src="http://d3js.org/queue.v1.min.js"></script>
     <script src="libs/jquery/jquery-2.1.1.min.js" charset="utf-8"></script>
-    <script src="libs/jquery/jquery.range.js" charset="utf-8"></script> <!-- https://github.com/nitinhayaran/jRange/blob/master/jquery.range.css -->
     <script src="libs/bootstrap/js/bootstrap.min.js" charset="utf-8"></script>
     <script src="libs/jquery-ui/jquery-ui.js"></script>
 
@@ -59,7 +58,8 @@
     <div class="maintitle"><h1>Alexander: The <i>What If?</i> of War</h1></div>
     <div class="container">
         <div class="row">
-            <div class="col-md-11"><input type="hidden" value="1946" class="slider-input" id="yearslider" onstatechange="updateYear(value)"></div>
+            <div class="col-md-1"><p style="position: relative; top: 75%; transform: translateY(-25%); font-size: 18px">&nbsp&nbsp&nbsp&nbspYear:</p></div>
+            <div class="col-md-10" id="timeSlider"></div>
             <button onclick="playMapVis()" type="submit" class="btn btn-success">Play</button>
         </div>
         <div class="row">
@@ -89,17 +89,19 @@
     </div>
     <script>
     	// Instantiate the slider
-	    $('.slider-input').jRange({
-		    from: 1946,
-		    to: 2007,
-		    step: 1,
-		    scale: ["Year",1961,1977,1992,2007],
-		    format: '%s',
-		    width: 1050,
-		    showLabels: true,
-            theme: 'theme-blue',
-            onstatechange: function(value) {updateYear(value)} 
-		});
+        $("#timeSlider").slider({
+            range: "min",
+            max: 2007,
+            min: 1946,
+            orientation: "horizontal",
+            value: 1946,
+            animate: "slow",
+            step: 1,
+            change: function(d, i) {updateYear()},
+            slide: function(d, i) {updateYear()}
+        });
+        d3.select(".ui-slider-handle").append("p").text("heo");
+
         // variables keeping global knowledge of the data
         var countries_map;
         var power_ranks;
@@ -109,15 +111,15 @@
         var map_vis;
         var bar_vis;
 
-        function updateYear(year)
+        function updateYear()
         {
-            map_vis.wrangleData(year);
+            map_vis.wrangleData($("#timeSlider").slider("value"));
         }
 
         function playMapVis()
         {
-            d3.select(".slider-input").attr("value", 1946);
-            console.log(d3.select(".slider-input"));
+            //d3.select(".slider-input").attr("value", 1946);
+            //console.log(d3.select(".slider-input"));
             //$("#mySlider").slider("value", $("#mySlider").slider("option", "min") );
             // map_vis.playVis();
         }
@@ -146,7 +148,7 @@
             }
 
             // call this function after both files are loaded -- error should be "null" if no error
-            var dataLoaded = function (error, _world, _powerrank, _blips, _deaths)
+            var dataLoaded = function (error, _world, _powerrank, _blips, _deaths, _atwar, _milex)
             {
                 if (!error)
                 {
@@ -154,6 +156,7 @@
                     power_ranks = _powerrank;
                     blips_data = _blips;
                     deaths_data = _deaths;
+                    console.log(_atwar);
 
                     initVis();
                 }
@@ -171,6 +174,8 @@
                     .defer(d3.json, 'data/power-rank.json')
                     .defer(d3.json, 'data/blips.json')
                     .defer(d3.json, 'data/deaths.json')
+                    .defer(d3.json, 'data/at_war.json')
+                    .defer(d3.json, 'data/milex.json')
                     .await(dataLoaded);
             }
 
