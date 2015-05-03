@@ -103,8 +103,10 @@ BarVis.prototype.onSelectionChange = function ()
 /**
  * Helper function thatb gets the width of a D3 element
  */
+ /*
 var getInnerWidth = function(element)
 {
     var style = window.getComputedStyle(element.node(), null);
     return parseInt(style.getPropertyValue('width'));
 }
+*/

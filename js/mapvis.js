@@ -18,8 +18,8 @@ MapVis = function(_parentElement, _countriesData, _powerRanks, _eventHandler)
     this.graticule = d3.geo.graticule();
     this.tooltip = this.parentElement.append("div").attr("class", "tooltip hidden");
 
-    this.offsetL = 430;
-    this.offsetT = 80;
+    this.offsetL = 30;
+    this.offsetT = 20;
 
     this.initVis();
 }
@@ -34,7 +34,7 @@ MapVis.prototype.initVis = function()
 
     this.projection = d3.geo.mercator()
         .translate([thatm.width / 2, thatm.height / 2])
-        .center([0, 45])
+        .center([0, 50])
         .scale(thatm.width / 2 / Math.PI);
 
     this.path = d3.geo.path().projection(thatm.projection);
@@ -69,6 +69,27 @@ MapVis.prototype.wrangleData = function(_year)
 MapVis.prototype.updateVis = function()
 {
     thatm = this;
+    d3.select('svg.mapSvg').remove();
+
+
+    this.projection = d3.geo.mercator()
+        .translate([thatm.width / 2, thatm.height / 2])
+        .center([0, 50])
+        .scale(thatm.width / 2 / Math.PI);
+
+    this.path = d3.geo.path().projection(thatm.projection);
+
+    this.parentElement
+        .attr("transform", "translate(" + -500 + "," + 0 + ")")
+
+    this.svg = this.parentElement.append("svg")
+        .attr("width", thatm.width)
+        .attr("height", thatm.height)
+        .attr("class", "mapSvg")
+        // .on("click", click)
+        .append("g");
+
+    this.g = this.svg.append("g");
 
     // Map Code From: http://techslides.com/d3-map-starter-kit
 
@@ -91,9 +112,6 @@ MapVis.prototype.updateVis = function()
       .attr("id", function(d,i) { return d.id; })
       .attr("title", function(d,i) { return d.properties.name; })
       .style("fill", function(d, i) {
-            console.log(d.properties.name);
-
-
         var toColorCINC = thatm.power.filter(function(y,i) {
             return y.year == thatm.year;
         })[0]
@@ -105,15 +123,24 @@ MapVis.prototype.updateVis = function()
 
         if (toColorCINC.length == 0)
         {
-            return "#3f007d";
+            return "#ffffff";
         }
         else
         {
+            // http://colorbrewer2.org/
+            if (toColorCINC[0].cinc < 0.05)
+                return "#e5f5f9";
             if (toColorCINC[0].cinc < 0.1)
-                return "#41ab5d";
+                return "#ccece6";
+            if (toColorCINC[0].cinc < 0.15)
+                return "#99d8c9";
             if (toColorCINC[0].cinc < 0.2)
-                return "#238b45";
+                return "#66c2a4";
+            if (toColorCINC[0].cinc < 0.25)
+                return "#41ae76";
             if (toColorCINC[0].cinc < 0.3)
+                return "#238b45";
+            if (toColorCINC[0].cinc < 0.35)
                 return "#006d2c";
             if (toColorCINC[0].cinc < 0.4)
                 return "#00441b";
@@ -154,6 +181,7 @@ MapVis.prototype.onSelectionChange = function ()
  */
 var getInnerWidth = function(element)
 {
-    var style = window.getComputedStyle(element.node(), null);
+    // var style = window.getComputedStyle(element.node(), null);
+    return 1200;
     return parseInt(style.getPropertyValue('width'));
 }

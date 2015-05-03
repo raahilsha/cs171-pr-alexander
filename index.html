@@ -27,7 +27,7 @@
     <link rel="stylesheet" type="text/css" href="css/myStyle.css">
 </head>
 <body>
-    <nav class="navbar navbar-inverse navbar-fixed-top">
+    <nav class="navbar navbar-default navbar-fixed-top">
       <div class="container-fluid">
         <div class="navbar-header">
           <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-2">
@@ -51,18 +51,20 @@
       </div>
     </nav>
 
+    <div class="row">
+        <svg height="20"></svg>
+    </div>
     <div class="maintitle"><h1>Alexander: The <i>What If?</i> of War</h1></div>
     <div class="container">
         <div class="row">
-            <div class="col-md-10"><input type="hidden" value="2007" class="slider-input" id="yearslider" onstatechange="updateYear(value)"></div>
+            <div class="col-md-8"><input type="hidden" value="2007" class="slider-input" id="yearslider" onstatechange="updateYear(value)"></div>
+            <a href="#" class="btn btn-success">Play</a>
         </div>
         <div class="row">
             <svg height="20"></svg>
         </div>
         <div class="row">
-            <div id="barVis" class="col-md-3">
-            </div>
-            <div class="col-md-15" id="mapVis">
+            <div class="col-md-12" id="mapVis">
             </div>
         </div>
         <div class="row">
@@ -108,7 +110,7 @@
         function updateYear(year)
         {
             d3.select("#yeartext").text(year + "");
-            bar_vis.wrangleData(year);
+            // bar_vis.wrangleData(year);
             map_vis.wrangleData(year);
         }
 

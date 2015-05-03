@@ -55,14 +55,14 @@ input[type=range]
 
 svg.mapSvg
 {
-    position: absolute;
-    right: 230px;
-    margin:10px 10%;
+    /*position: absolute;*/
+    /*right: 230px;*/
+    /*margin:10px 10%;*/
     border:2px solid #000;
     border-radius: 5px;
     height: 600px;
     overflow:hidden;
-    background: #F0F8FF;
+    background: #2b8cbe;
 }
 
 .hidden 
@@ -95,10 +95,11 @@ div.tooltip
   stroke: #ccc;
   stroke-width: 1px;
 }
-
+/*
 #barVis
 {
     position: relative;
     left: -300px;
     top: 0;
 }
+*/
