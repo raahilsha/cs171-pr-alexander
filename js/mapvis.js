@@ -91,6 +91,8 @@ MapVis.prototype.updateVis = function()
       .attr("id", function(d,i) { return d.id; })
       .attr("title", function(d,i) { return d.properties.name; })
       .style("fill", function(d, i) {
+            console.log(d.properties.name);
+
 
         var toColorCINC = thatm.power.filter(function(y,i) {
             return y.year == thatm.year;
