@@ -60,9 +60,9 @@
             <svg height="20"></svg>
         </div>
         <div class="row">
-            <div class="col-md-15" id="mapVis">
-            </div>
             <div id="barVis" class="col-md-3">
+            </div>
+            <div class="col-md-15" id="mapVis">
             </div>
         </div>
         <div class="row">
@@ -99,6 +99,9 @@
         // variables keeping global knowledge of the data
         var countries_map;
         var power_ranks;
+        var blips_data;
+        var deaths_data;
+
         var map_vis;
         var bar_vis;
 
@@ -133,12 +136,14 @@
             }
 
             // call this function after both files are loaded -- error should be "null" if no error
-            var dataLoaded = function (error, _world, _powerrank)
+            var dataLoaded = function (error, _world, _powerrank, _blips, _deaths)
             {
                 if (!error)
                 {
                     countries_map = topojson.feature(_world, _world.objects.countries).features;
                     power_ranks = _powerrank;
+                    blips_data = _blips;
+                    deaths_data = _deaths;
 
                     initVis();
                 }
@@ -154,6 +159,8 @@
                 queue()
                     .defer(d3.json, 'data/world-topo-min.json')
                     .defer(d3.json, 'data/power-rank.json')
+                    .defer(d3.json, 'data/blips.json')
+                    .defer(d3.json, 'data/deaths.json')
                     .await(dataLoaded);
             }
 

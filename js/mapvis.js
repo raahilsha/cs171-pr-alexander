@@ -9,6 +9,7 @@ MapVis = function(_parentElement, _countriesData, _powerRanks, _eventHandler)
     this.topo = _countriesData;
     this.power = _powerRanks;
     this.eventHandler = _eventHandler;
+    this.year = 2007;
 
     this.margin = {top: 20, right: 0, bottom: 30, left: 70},
     this.width = getInnerWidth(this.parentElement) - this.margin.left - this.margin.right,
@@ -50,7 +51,7 @@ MapVis.prototype.initVis = function()
 
     this.g = this.svg.append("g");
 
-    this.wrangleData();
+    this.wrangleData(this.year);
     this.updateVis();
 }
 
@@ -58,6 +59,7 @@ MapVis.prototype.initVis = function()
 MapVis.prototype.wrangleData = function(_year)
 {
     this.year = _year;
+    this.updateVis();
 }
 
 /**
@@ -82,7 +84,6 @@ MapVis.prototype.updateVis = function()
 
     this.country = this.g.selectAll(".country").data(thatm.topo);
 
-    console.log(this.power);
 
     this.country.enter().insert("path")
       .attr("class", "country")
@@ -91,15 +92,31 @@ MapVis.prototype.updateVis = function()
       .attr("title", function(d,i) { return d.properties.name; })
       .style("fill", function(d, i) {
 
-
-        toColorCINC = this.allData.filter(function(y,i) {
-            return y.year == _year;
-        })[0].countries.filter(function(y,i) {
-            // FIND THE COUNTRY WITH NAME THAT MATCHES
+        var toColorCINC = thatm.power.filter(function(y,i) {
+            return y.year == thatm.year;
+        })[0]
+        .countries.filter(function(y,i) {
             return y.name == d.properties.name;
-        })[0].cinc;
+        });//[0].cinc;
 
-        console.log(parseInt(toColorCINC * 20));
+        basicColor = d3.rgb("#00441b");
+
+        if (toColorCINC.length == 0)
+        {
+            return "#3f007d";
+        }
+        else
+        {
+            if (toColorCINC[0].cinc < 0.1)
+                return "#41ab5d";
+            if (toColorCINC[0].cinc < 0.2)
+                return "#238b45";
+            if (toColorCINC[0].cinc < 0.3)
+                return "#006d2c";
+            if (toColorCINC[0].cinc < 0.4)
+                return "#00441b";
+        }
+
 
         return d.properties.color;
     });
