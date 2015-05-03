@@ -100,7 +100,7 @@
             change: function(d, i) {updateYear()},
             slide: function(d, i) {updateYear()}
         });
-        d3.select(".ui-slider-handle").append("p").text("heo");
+        d3.select(".ui-slider-handle").text("heo").attr("transform", function(d) {return "translate(0, -50)"});
 
         // variables keeping global knowledge of the data
         var countries_map;
