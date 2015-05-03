@@ -22,7 +22,7 @@ BarVis = function(_parentElement, _powerdata, _eventHandler)
 
 
 /**
- * Method thatb sets up the SVG and the variables
+ * Method that sets up the SVG and the variables
  */
 BarVis.prototype.initVis = function()
 {

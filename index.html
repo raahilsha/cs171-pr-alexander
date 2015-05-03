@@ -11,10 +11,12 @@
     <script src="libs/jquery/jquery-2.1.1.min.js" charset="utf-8"></script>
     <script src="libs/jquery/jquery.range.js" charset="utf-8"></script> <!-- https://github.com/nitinhayaran/jRange/blob/master/jquery.range.css -->
     <script src="libs/bootstrap/js/bootstrap.min.js" charset="utf-8"></script>
+    <script src="libs/jquery-ui/jquery-ui.js"></script>
 
     <!--Stylesheets-->
     <link rel="stylesheet" type="text/css" href="libs/bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="css/jquery.range.css">
+    <link rel="stylesheet" type="text/css" href="libs/jquery-ui/jquery-ui.css">
 
     <!-- Get some nice font-->
     <link href='http://fonts.googleapis.com/css?family=PT+Sans:400,700' rel='stylesheet' type='text/css'>
@@ -57,8 +59,8 @@
     <div class="maintitle"><h1>Alexander: The <i>What If?</i> of War</h1></div>
     <div class="container">
         <div class="row">
-            <div class="col-md-8"><input type="hidden" value="2007" class="slider-input" id="yearslider" onstatechange="updateYear(value)"></div>
-            <a href="#" class="btn btn-success">Play</a>
+            <div class="col-md-11"><input type="hidden" value="1946" class="slider-input" id="yearslider" onstatechange="updateYear(value)"></div>
+            <button onclick="playMapVis()" type="submit" class="btn btn-success">Play</button>
         </div>
         <div class="row">
             <svg height="20"></svg>
@@ -93,7 +95,7 @@
 		    step: 1,
 		    scale: ["Year",1961,1977,1992,2007],
 		    format: '%s',
-		    width: 1000,
+		    width: 1050,
 		    showLabels: true,
             theme: 'theme-blue',
             onstatechange: function(value) {updateYear(value)} 
@@ -109,9 +111,15 @@
 
         function updateYear(year)
         {
-            d3.select("#yeartext").text(year + "");
-            // bar_vis.wrangleData(year);
             map_vis.wrangleData(year);
+        }
+
+        function playMapVis()
+        {
+            d3.select(".slider-input").attr("value", 1946);
+            console.log(d3.select(".slider-input"));
+            //$("#mySlider").slider("value", $("#mySlider").slider("option", "min") );
+            // map_vis.playVis();
         }
 
         $(function()
@@ -125,7 +133,7 @@
                 map_vis.updateVis();
 
                 bar_vis = new BarVis(d3.select("#barVis"), power_ranks, MyEventHandler)
-                updateYear(2007);
+                updateYear(1946);
 
                 $(MyEventHandler).bind("countryChanged", function(event, argument)
                 {
