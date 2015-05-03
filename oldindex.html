@@ -9,7 +9,7 @@
     <script src="libs/topojson/topojson.v1.min.js"></script>
     <script src="http://d3js.org/queue.v1.min.js"></script>
     <script src="libs/jquery/jquery-2.1.1.min.js" charset="utf-8"></script>
-    <script src="libs/jquery/jquery.range.js" charset="utf-8"></script> <!-- https://github.com/nitinhayaran/jRange/blob/master/jquery.range.css -->
+    <script src="libs/jquery/jquery-range.js" charset="utf-8"></script>
     <script src="libs/bootstrap/js/bootstrap.min.js" charset="utf-8"></script>
 
     <!--Stylesheets-->
@@ -27,37 +27,12 @@
     <link rel="stylesheet" type="text/css" href="css/myStyle.css">
 </head>
 <body>
-    <nav class="navbar navbar-inverse navbar-fixed-top">
-      <div class="container-fluid">
-        <div class="navbar-header">
-          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-2">
-            <span class="sr-only">Toggle navigation</span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-          </button>
-          <a class="navbar-brand" href="#">Alexander: The <i>What If?</i> of War</a>
-        </div>
-
-        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-2">
-          <ul class="nav navbar-nav">
-            <li class="active"><a href="#">Link</a></li>
-            <li><a href="#">Link</a></li>
-          </ul>
-          <ul class="nav navbar-nav navbar-right">
-            <li><a href="#">Link</a></li>
-          </ul>
-        </div>
-      </div>
-    </nav>
-
     <div class="maintitle"><h1>Alexander: The <i>What If?</i> of War</h1></div>
     <div class="container">
         <div class="row">
-            <div class="col-md-10"><input type="hidden" value="2007" class="slider-input" id="yearslider" onstatechange="updateYear(value)"></div>
-        </div>
-        <div class="row">
-            <svg height="20"></svg>
+            <div class="col-md-1">&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbspYear:</div>
+            <div class="col-md-10"><input type="hidden" value="2007" class="slider-input" id="yearslider" oninput="updateYear(value)"></div>
+            <span id = "yeartext">2007</span>
         </div>
         <div class="row">
             <div class="col-md-15" id="mapVis">
@@ -85,16 +60,14 @@
     </div>
     <script>
     	// Instantiate the slider
-	    $('.slider-input').jRange({
-		    from: 1946,
+	    $('.yearSlider').jRange({
+		    from: 1816,
 		    to: 2007,
 		    step: 1,
-		    scale: ["Year",1950,1975,2000,2007],
+		    scale: [0,25,50,75,100],
 		    format: '%s',
-		    width: 1000,
-		    showLabels: true,
-            theme: 'theme-blue',
-            onstatechange: function(value) {updateYear(value)} 
+		    width: 300,
+		    showLabels: true
 		});
         // variables keeping global knowledge of the data
         var countries_map;
@@ -106,7 +79,6 @@
         {
             d3.select("#yeartext").text(year + "");
             bar_vis.wrangleData(year);
-            map_vis.wrangleData(year);
         }
 
         $(function()
@@ -116,7 +88,7 @@
             {
                 var MyEventHandler = new Object();
 
-                map_vis = new MapVis(d3.select("#mapVis"), countries_map, power_ranks, MyEventHandler);
+                map_vis = new MapVis(d3.select("#mapVis"), countries_map, MyEventHandler);
                 map_vis.updateVis();
 
                 bar_vis = new BarVis(d3.select("#barVis"), power_ranks, MyEventHandler)

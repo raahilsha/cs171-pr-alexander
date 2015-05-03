@@ -3,10 +3,11 @@
  * @constructor
  */
 
-MapVis = function(_parentElement, _countriesData, _eventHandler)
+MapVis = function(_parentElement, _countriesData, _powerRanks, _eventHandler)
 {
     this.parentElement = _parentElement;
     this.topo = _countriesData;
+    this.power = _powerRanks;
     this.eventHandler = _eventHandler;
 
     this.margin = {top: 20, right: 0, bottom: 30, left: 70},
@@ -54,8 +55,9 @@ MapVis.prototype.initVis = function()
 }
 
 
-MapVis.prototype.wrangleData = function()
+MapVis.prototype.wrangleData = function(_year)
 {
+    this.year = _year;
 }
 
 /**
@@ -80,12 +82,27 @@ MapVis.prototype.updateVis = function()
 
     this.country = this.g.selectAll(".country").data(thatm.topo);
 
+    console.log(this.power);
+
     this.country.enter().insert("path")
       .attr("class", "country")
       .attr("d", thatm.path)
       .attr("id", function(d,i) { return d.id; })
       .attr("title", function(d,i) { return d.properties.name; })
-      .style("fill", function(d, i) { return d.properties.color; });
+      .style("fill", function(d, i) {
+
+
+        toColorCINC = this.allData.filter(function(y,i) {
+            return y.year == _year;
+        })[0].countries.filter(function(y,i) {
+            // FIND THE COUNTRY WITH NAME THAT MATCHES
+            return y.name == d.properties.name;
+        })[0].cinc;
+
+        console.log(parseInt(toColorCINC * 20));
+
+        return d.properties.color;
+    });
 
     this.country.on("mousemove", function(d,i) {
         var mouse = d3.mouse(thatm.svg.node()).map(function(d) { return parseInt(d); });
