@@ -100,7 +100,6 @@
             change: function(d, i) {updateYear()},
             slide: function(d, i) {updateYear()}
         });
-        d3.select(".ui-slider-handle").text("heo").attr("transform", function(d) {return "translate(0, -50)"});
 
         // variables keeping global knowledge of the data
         var countries_map;
@@ -114,10 +113,21 @@
         function updateYear()
         {
             map_vis.wrangleData($("#timeSlider").slider("value"));
+            d3.select(".ui-slider-range").select("svg").remove();
+            d3.select(".ui-slider-range").append("svg")
+                                .attr("width", 1500)
+                                .attr("height", 40)
+                                .append("text")
+                                .attr("x", 937)
+                                .attr("y", 30)
+                                .style("font-size","16px")
+                                .text($("#timeSlider").slider("value"));
         }
 
         function playMapVis()
         {
+            $("#timeSlider").slider("value", 1946);
+            d3.select("#timeSlider").transition().attr("value", 1946).transition().delay(5000).attr("value", 2007);
             //d3.select(".slider-input").attr("value", 1946);
             //console.log(d3.select(".slider-input"));
             //$("#mySlider").slider("value", $("#mySlider").slider("option", "min") );
@@ -148,7 +158,7 @@
             }
 
             // call this function after both files are loaded -- error should be "null" if no error
-            var dataLoaded = function (error, _world, _powerrank, _blips, _deaths, _atwar, _milex)
+            var dataLoaded = function (error, _world, _powerrank, _blips, _deaths, _atwar, _milex, _latlong)
             {
                 if (!error)
                 {
@@ -156,7 +166,7 @@
                     power_ranks = _powerrank;
                     blips_data = _blips;
                     deaths_data = _deaths;
-                    console.log(_atwar);
+                    console.log(_latlong);
 
                     initVis();
                 }
@@ -176,6 +186,7 @@
                     .defer(d3.json, 'data/deaths.json')
                     .defer(d3.json, 'data/at_war.json')
                     .defer(d3.json, 'data/milex.json')
+                    .defer(d3.json, 'data/latlong.json')
                     .await(dataLoaded);
             }
 
