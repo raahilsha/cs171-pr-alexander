@@ -47,6 +47,7 @@
             <li><a href="#viz1">Warfare</a></li>
             <li><a href="#viz2">Peacefare</a></li>
             <li><a href="#viz3">Resources</a></li>
+            <li><a href="#viz4">What If?</a></li>
           </ul>
           <ul class="nav navbar-nav navbar-right">
             <li><a href="https://github.com/raahilsha/cs171-pr-alexander/">Github</a></li>
@@ -149,6 +150,39 @@
                 </svg>
             </div>
         </div>
+
+        <div class="jumbotron" id="jumbo4">
+              <h1>What could exist now</h1>
+              <p>This is a simple hero unit, a simple jumbotron-style component for calling extra attention to featured content or information.</p>
+              <p><a class="btn btn-primary btn-lg" href="#viz4">Learn more</a></p>
+        </div>
+
+        <a name="viz4"></a>
+        <div class="row"><svg height="0"></svg></div>
+        <div class="page-header">
+            <div class="row">
+                <div class="col-lg-12">
+                  <h1 id="buttons">The Savings of Peace</h1>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-4" id="leftVis">
+                <svg width="390" height="330" style="background-color: lightblue">
+                    <text x="50" y="50">Left Selected Country</text>
+                </svg>
+            </div>
+            <div class="col-md-4" id="compareVis">
+                <svg width="390" height="330" style="background-color: lightcoral">
+                    <text x="50" y="50">Compare Selected Countries</text>
+                </svg>
+            </div>
+            <div class="col-md-4" id="rightVis">
+                <svg width="390" height="330" style="background-color: lightgreen">
+                    <text x="50" y="50">Right Selected Country</text>
+                </svg>
+            </div>
+        </div>
     </div>
     <script>
     	// Instantiate the slider
@@ -180,6 +214,7 @@
             $('#jumbo1').height($(window).height());
             $('#jumbo2').height($(window).height());
             $('#jumbo3').height($(window).height());
+            $('#jumbo4').height($(window).height());
         });
 
         // variables keeping global knowledge of the data
