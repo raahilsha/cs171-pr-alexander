@@ -1,4 +1,4 @@
-MapVis2 = function(_parentElement, _countriesData, _powerRanks, _blips, _atwar, _latlong, _eventHandler)
+MapVis2 = function(_parentElement, _countriesData, _powerRanks, _blips, _atwar, _latlong, _allies, _eventHandler)
 {
     this.parentElement = _parentElement;
     this.topo = _countriesData;
@@ -7,6 +7,7 @@ MapVis2 = function(_parentElement, _countriesData, _powerRanks, _blips, _atwar, 
     this.atWar = _atwar;
     this.latLong = _latlong;
     this.countryNames = this.latLong.map(function(d, i) { return d.name; });
+    this.allies = _allies;
     this.eventHandler = _eventHandler;
     this.year = 1946;
 
@@ -16,10 +17,12 @@ MapVis2 = function(_parentElement, _countriesData, _powerRanks, _blips, _atwar, 
 
     this.graticule = d3.geo.graticule();
     this.tooltip = this.parentElement.append("div").attr("class", "tooltip hidden");
-    this.zoom = d3.behavior.zoom().scaleExtent([1,9]).on("zoom", this.move);
+    this.zoom = d3.behavior.zoom().scaleExtent([1,19]).on("zoom", this.move);
 
     this.offsetL = 30;
     this.offsetT = 20;
+
+    this.zscale2 = 1;
 
     this.setupVis();
     this.updateVis();
@@ -43,7 +46,7 @@ MapVis2.prototype.setupVis = function()
     this.svg = this.parentElement.append("svg")
         .attr("width", thatm.width)
         .attr("height", thatm.height)
-        .attr("class", "mapSvg")
+        .attr("class", "mapSvg2")
         .call(thatm.zoom)
         // .on("click", click)
         .append("g");
@@ -102,16 +105,23 @@ MapVis2.prototype.wrangleData = function(_year)
     var thatm = this;
     this.year = _year;
 
-    var atwarthisyear = this.atWar.filter(function(d, i) {
+    var atwarthisyear = this.allies.filter(function(d, i) {
         return d.year == thatm.year;
-    })[0].enemies;
+    })[0].alliances;
 
     var allatwar = [];
-    d3.selectAll(".gline").remove();
+    d3.selectAll(".gline2").remove();
     atwarthisyear.forEach(function(d, i) {
-        allatwar.push(d.SideA);
-        allatwar.push(d.SideB);
-        thatm.addLine(d.SideA, d.SideB);
+        var newcol = "yellow";
+        if (d.kind == "entente")
+            newcol = "brown";
+        else if (d.kind == "defense")
+            newcol = "blue";
+        else if (d.kind == "nonaggression")
+            newcol = "green";
+        else if (d.kind == "neutrality")
+            newcol = "yellow";
+        thatm.addLine(d.state_name1, d.state_name2, newcol, d.kind);
     });
 
     // this.updateVis();
@@ -169,34 +179,12 @@ MapVis2.prototype.wrangleData = function(_year)
                 return "#00441b";
         }
     })
-/*
-    .style("stroke", function(d, i) {
-        if ($.inArray(d.properties.name, allatwar) > -1)
-            return "#CC0000";
-        else
-            return "black";
-    })
-    .style("stroke-width", function(d, i) {
-        if ($.inArray(d.properties.name, allatwar) > -1)
-            return 2;
-        else
-            return 1.5;
-    });
-*/
-    d3.selectAll(".gpoint").selectAll("circle")
-        .transition().duration(1000)
-        .attr("r", 0);
-    var oo = this.blips.filter(function(d) {
-        return (d["Year"] == _year); 
-    }).forEach(function(d) {
-        thatm.addBlip(d.Latitude, d.Longitude, d);
-    });
 }
 
 MapVis2.prototype.updateVis = function()
 {
     thatm = this;
-    d3.select('svg.mapSvg').remove();
+    d3.select('svg.mapSvg2').remove();
     this.setupVis();
 
     // Map Code From: http://techslides.com/d3-map-starter-kit
@@ -328,10 +316,6 @@ MapVis2.prototype.updateVis = function()
         .attr("fill", "#000000")
         .attr("text-anchor", "middle")
         .text("At War");
-
-    /*thatm.latLong.forEach(function(d) {
-        thatm.addCapital(d.name);
-    });*/
 }
 
 MapVis2.prototype.addBlip = function(lat, lon, dat)
@@ -397,7 +381,7 @@ MapVis2.prototype.addCapital = function(c1)
         })
 }
 
-MapVis2.prototype.addLine = function(c1, c2)
+MapVis2.prototype.addLine = function(c1, c2, color, kind)
 {
     thatm = this;
     if ($.inArray(c2, thatm.countryNames) > -1 && $.inArray(c1, thatm.countryNames) > -1)
@@ -406,7 +390,7 @@ MapVis2.prototype.addLine = function(c1, c2)
         var lon1 = thatm.latLong.filter(function(d) { return d.name == c1; })[0].longitude;
         var lat2 = thatm.latLong.filter(function(d) { return d.name == c2; })[0].latitude;
         var lon2 = thatm.latLong.filter(function(d) { return d.name == c2; })[0].longitude;
-        var gline = this.g.append("g").attr("class", "gline");
+        var gline = this.g.append("g").attr("class", "gline2");
         var x1 = this.projection([lon1,lat1])[0];
         var y1 = this.projection([lon1,lat1])[1];
         var x2 = this.projection([lon2,lat2])[0];
@@ -415,9 +399,10 @@ MapVis2.prototype.addLine = function(c1, c2)
         var cx1 = this.projection([0,0])[0];
         var cy1 = this.projection([0,0])[1];
 
-        var gline = thatm.g.append("line").attr("class", "gline")
-            .attr("stroke", "red")
-            .attr("stroke-width", "2.5px")
+        var gline = thatm.g.append("line").attr("class", "gline2")
+            .attr("stroke", color)
+            .style("stroke-width", 1)
+            .attr("stroke-opacity", ".5")
             .attr("x1", x1)
             .attr("y1", y1)
             .attr("x2", x2)
@@ -427,28 +412,30 @@ MapVis2.prototype.addLine = function(c1, c2)
             var mouse = d3.mouse(thatm.svg.node()).map(function(d) { return parseInt(d); });
             thatm.tooltip.classed("hidden", false)
                 .attr("style", "left:"+(mouse[0]+thatm.offsetL)+"px;top:"+(mouse[1]+thatm.offsetT)+"px")
-                .html(c1 + " vs. " + c2);
+                .html(function() {
+                    if (kind == "entente")
+                        return "Entente between " + c1 + " and " + c2;
+                    else if (kind == "defense")
+                        return "Defense pact between " + c1 + " and " + c2;
+                    else if (kind == "nonaggression")
+                        return "Nonaggression pact between " + c1 + " and " + c2;
+                    else if (kind == "neutrality")
+                        return "Neutrality pact between " + c1 + " and " + c2;
+                });
         })
         .on("mouseout", function(d,i) {
             thatm.tooltip.classed("hidden", true);
         })
     }
-
-
-    /*.style("stroke", function(d, i) {
-        if ($.inArray(d.properties.name, allatwar) > -1)
-            return "red";
-        else
-            return "black";
-    })*/
 }
 
 MapVis2.prototype.move = function ()
 {
     // var thatm = this;
+    
     var t = d3.event.translate;
-    var s = d3.event.scale; 
-    zscale = s;
+    var s = d3.event.scale;
+    this.zscale2 = s;
     var h = thatm.height/4;
 
 
@@ -462,11 +449,11 @@ MapVis2.prototype.move = function ()
         Math.max(thatm.height  * (1 - s) - h * s, t[1])
     );
 
-    map_vis.zoom.translate(t);
-    thatm.g.attr("transform", "translate(" + t + ")scale(" + s + ")");
+    map_vis2.zoom.translate(t);
+    map_vis2.g.attr("transform", "translate(" + t + ")scale(" + s + ")");
 
     d3.selectAll(".country").style("stroke-width", 1.5 / s);
-    d3.selectAll(".gline").style("stroke-width", 2.5 / s);
+    d3.selectAll(".gline2").style("stroke-width", 1 / s);
 }
 
 

@@ -37,8 +37,8 @@ MapVis.prototype.setupVis = function()
 
     this.path = d3.geo.path().projection(thatm.projection);
 
-    this.parentElement
-        .attr("transform", "translate(" + -500 + "," + 0 + ")");
+    //this.parentElement
+    //    .attr("transform", "translate(" + -500 + "," + 0 + ")");
 
     this.svg = this.parentElement.append("svg")
         .attr("width", thatm.width)
@@ -328,10 +328,6 @@ MapVis.prototype.updateVis = function()
         .attr("fill", "#000000")
         .attr("text-anchor", "middle")
         .text("At War");
-
-    /*thatm.latLong.forEach(function(d) {
-        thatm.addCapital(d.name);
-    });*/
 }
 
 MapVis.prototype.addBlip = function(lat, lon, dat)
@@ -463,7 +459,7 @@ MapVis.prototype.move = function ()
     );
 
     map_vis.zoom.translate(t);
-    thatm.g.attr("transform", "translate(" + t + ")scale(" + s + ")");
+    map_vis.g.attr("transform", "translate(" + t + ")scale(" + s + ")");
 
     d3.selectAll(".country").style("stroke-width", 1.5 / s);
     d3.selectAll(".gline").style("stroke-width", 2.5 / s);

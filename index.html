@@ -46,6 +46,7 @@
             <li class="active"><a href="#">Home</a></li>
             <li><a href="#viz1">Warfare</a></li>
             <li><a href="#viz2">Peacefare</a></li>
+            <li><a href="#viz3">Resources</a></li>
           </ul>
           <ul class="nav navbar-nav navbar-right">
             <li><a href="https://github.com/raahilsha/cs171-pr-alexander/">Github</a></li>
@@ -87,6 +88,12 @@
             </div>
         </div>
 
+        <div class="jumbotron" id="jumbo2">
+              <h1>Introduction to the Conduct of Peace since WW2</h1>
+              <p>This is a simple hero unit, a simple jumbotron-style component for calling extra attention to featured content or information.</p>
+              <p><a class="btn btn-primary btn-lg" href="#viz2">Learn more</a></p>
+        </div>
+
         <a name="viz2"></a>
         <div class="row"><svg height="0"></svg></div>
         <div class="page-header">
@@ -96,7 +103,6 @@
                 </div>
             </div>
         </div>
-
         <div class="row">
             <div class="col-md-1"><p id="timeRow2" style="position: relative; top: 75%; transform: translateY(-25%); font-size: 18px">Year:</p></div>
             <div class="col-md-10" id="timeSlider2"></div>
@@ -110,6 +116,22 @@
             </div>
         </div>
 
+
+        <div class="jumbotron" id="jumbo3">
+              <h1>How humans waste things</h1>
+              <p>This is a simple hero unit, a simple jumbotron-style component for calling extra attention to featured content or information.</p>
+              <p><a class="btn btn-primary btn-lg" href="#viz3">Learn more</a></p>
+        </div>
+
+        <a name="viz3"></a>
+        <div class="row"><svg height="0"></svg></div>
+        <div class="page-header">
+            <div class="row">
+                <div class="col-lg-12">
+                  <h1 id="buttons">Resources wasted on War</h1>
+                </div>
+            </div>
+        </div>
         <div class="row">
             <div class="col-md-4" id="leftVis">
                 <svg width="390" height="330" style="background-color: lightblue">
@@ -156,6 +178,8 @@
         // Set jumbotron to page height
         $(document).ready(function(){
             $('#jumbo1').height($(window).height());
+            $('#jumbo2').height($(window).height());
+            $('#jumbo3').height($(window).height());
         });
 
         // variables keeping global knowledge of the data
@@ -165,6 +189,7 @@
         var deaths_data;
         var at_war;
         var lat_long;
+        var allies;
 
         var map_vis;
         var map_vis2;
@@ -175,16 +200,23 @@
             map_vis.wrangleData($("#timeSlider").slider("value"));
             d3.select("#timeRow").text("Yr: " + $("#timeSlider").slider("value"));
         }
+
         function updateYear2()
         {
-            map_vis2.wrangleData($("#timeSlider2").slider("value"));
             d3.select("#timeRow2").text("Yr: " + $("#timeSlider2").slider("value"));
+            map_vis2.wrangleData($("#timeSlider2").slider("value"));
         }
 
         function playMapVis()
         {
             $("#timeSlider").slider("value", 1946);
             playRecursive(2007 - 1946);
+        }
+
+        function playMapVis2()
+        {
+            $("#timeSlider2").slider("value", 1946);
+            playRecursive2(2007 - 1946);
         }
 
         function playRecursive(x)
@@ -197,12 +229,6 @@
             $("#timeSlider").slider("option", "disabled", true);
             $("#timeSlider").slider("value", $("#timeSlider").slider("value") + 1);
             setTimeout(function() {playRecursive(x - 1);}, 1000);
-        }
-
-        function playMapVis2()
-        {
-            $("#timeSlider2").slider("value", 1946);
-            playRecursive2(2007 - 1946);
         }
 
         function playRecursive2(x)
@@ -226,7 +252,7 @@
 
                 map_vis = new MapVis(d3.select("#mapVis"), countries_map, power_ranks, blips_data, at_war, lat_long, MyEventHandler);
                 map_vis.updateVis();
-                map_vis2 = new MapVis2(d3.select("#mapVis2"), countries_map, power_ranks, blips_data, at_war, lat_long, MyEventHandler);
+                map_vis2 = new MapVis2(d3.select("#mapVis2"), countries_map, power_ranks, blips_data, at_war, lat_long, allies, MyEventHandler);
                 map_vis2.updateVis();
 
                 // bar_vis = new BarVis(d3.select("#barVis"), power_ranks, MyEventHandler)
@@ -244,7 +270,7 @@
             }
 
             // call this function after both files are loaded -- error should be "null" if no error
-            var dataLoaded = function (error, _world, _powerrank, _blips, _deaths, _atwar, _milex, _latlong, _miltot)
+            var dataLoaded = function (error, _world, _powerrank, _blips, _deaths, _atwar, _milex, _latlong, _miltot, _alliances)
             {
                 if (!error)
                 {
@@ -254,7 +280,7 @@
                     deaths_data = _deaths;
                     at_war = _atwar;
                     lat_long = _latlong;
-                    console.log(_miltot);
+                    allies = _alliances;
 
                     initVis();
                 }
@@ -276,6 +302,7 @@
                     .defer(d3.json, 'data/milex.json')
                     .defer(d3.json, 'data/latlong.json')
                     .defer(d3.json, 'data/mil-total.json')
+                    .defer(d3.json, 'data/alliances.json')
                     .await(dataLoaded);
             }
 

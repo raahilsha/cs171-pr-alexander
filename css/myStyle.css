@@ -81,6 +81,20 @@ svg.mapSvg
     background: #2b8cbe;
 }
 
+svg.mapSvg2
+{
+    /*position: absolute;*/
+    /*right: 230px;*/
+    /*margin:10px 10%;*/
+    position: relative;
+    top: -20px;
+    border:2px solid #000;
+    border-radius: 5px;
+    height: 600px;
+    overflow:hidden;
+    background: #2b8cbe;
+}
+
 .hidden 
 { 
   display: none; 
