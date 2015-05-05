@@ -1,4 +1,4 @@
-MapVis = function(_parentElement, _countriesData, _powerRanks, _blips, _atwar, _latlong, _eventHandler)
+MapVis2 = function(_parentElement, _countriesData, _powerRanks, _blips, _atwar, _latlong, _eventHandler)
 {
     this.parentElement = _parentElement;
     this.topo = _countriesData;
@@ -26,7 +26,7 @@ MapVis = function(_parentElement, _countriesData, _powerRanks, _blips, _atwar, _
     this.initVis();
 }
 
-MapVis.prototype.setupVis = function()
+MapVis2.prototype.setupVis = function()
 {
     var thatm = this;
 
@@ -90,14 +90,14 @@ MapVis.prototype.setupVis = function()
           .attr("stop-color", function(d) { return d.color; });
 }
 
-MapVis.prototype.initVis = function()
+MapVis2.prototype.initVis = function()
 {
     var thatm = this;
     this.wrangleData(this.year);
 }
 
 
-MapVis.prototype.wrangleData = function(_year)
+MapVis2.prototype.wrangleData = function(_year)
 {
     var thatm = this;
     this.year = _year;
@@ -193,7 +193,7 @@ MapVis.prototype.wrangleData = function(_year)
     });
 }
 
-MapVis.prototype.updateVis = function()
+MapVis2.prototype.updateVis = function()
 {
     thatm = this;
     d3.select('svg.mapSvg').remove();
@@ -334,7 +334,7 @@ MapVis.prototype.updateVis = function()
     });*/
 }
 
-MapVis.prototype.addBlip = function(lat, lon, dat)
+MapVis2.prototype.addBlip = function(lat, lon, dat)
 {
     thatm = this;
     var gpoint = this.g.append("g").attr("class", "gpoint");
@@ -361,7 +361,7 @@ MapVis.prototype.addBlip = function(lat, lon, dat)
     })
 }
 
-MapVis.prototype.addCapital = function(c1)
+MapVis2.prototype.addCapital = function(c1)
 {
     var thatm = this;
 
@@ -397,7 +397,7 @@ MapVis.prototype.addCapital = function(c1)
         })
 }
 
-MapVis.prototype.addLine = function(c1, c2)
+MapVis2.prototype.addLine = function(c1, c2)
 {
     thatm = this;
     if ($.inArray(c2, thatm.countryNames) > -1 && $.inArray(c1, thatm.countryNames) > -1)
@@ -443,7 +443,7 @@ MapVis.prototype.addLine = function(c1, c2)
     })*/
 }
 
-MapVis.prototype.move = function ()
+MapVis2.prototype.move = function ()
 {
     // var thatm = this;
     var t = d3.event.translate;
@@ -470,7 +470,7 @@ MapVis.prototype.move = function ()
 }
 
 
-MapVis.prototype.onSelectionChange = function ()
+MapVis2.prototype.onSelectionChange = function ()
 {
 }
 

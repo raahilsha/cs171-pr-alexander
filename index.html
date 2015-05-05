@@ -22,6 +22,7 @@
 
     <!-- add own vis classes-->
     <script src = "js/mapvis.js"></script>
+    <script src = "js/mapvis2.js"></script>
     <script src = "js/barvis.js"></script>
 
     <!-- add own stylesheet-->
@@ -43,10 +44,11 @@
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-2">
           <ul class="nav navbar-nav">
             <li class="active"><a href="#">Home</a></li>
-            <li><a href="#viz1">Country Powers</a></li>
+            <li><a href="#viz1">Warfare</a></li>
+            <li><a href="#viz2">Peacefare</a></li>
           </ul>
           <ul class="nav navbar-nav navbar-right">
-            <li><a href="#">Link</a></li>
+            <li><a href="https://github.com/raahilsha/cs171-pr-alexander/">Github</a></li>
           </ul>
         </div>
       </div>
@@ -64,11 +66,10 @@
 
         <a name="viz1"></a>
         <div class="row"><svg height="0"></svg></div>
-
         <div class="page-header">
             <div class="row">
                 <div class="col-lg-12">
-                  <h1 id="buttons">Vizualization 1</h1>
+                  <h1 id="buttons">Warfare</h1>
                 </div>
             </div>
         </div>
@@ -85,6 +86,30 @@
             <div class="col-md-6" id="mapVis">
             </div>
         </div>
+
+        <a name="viz2"></a>
+        <div class="row"><svg height="0"></svg></div>
+        <div class="page-header">
+            <div class="row">
+                <div class="col-lg-12">
+                  <h1 id="buttons">Peacefare</h1>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-1"><p id="timeRow2" style="position: relative; top: 75%; transform: translateY(-25%); font-size: 18px">Year:</p></div>
+            <div class="col-md-10" id="timeSlider2"></div>
+            <button onclick="playMapVis2()" type="submit" class="btn btn-success">Play</button>
+        </div>
+        <div class="row">
+            <svg height="20"></svg>
+        </div>
+        <div class="row">
+            <div class="col-md-6" id="mapVis2">
+            </div>
+        </div>
+
         <div class="row">
             <div class="col-md-4" id="leftVis">
                 <svg width="390" height="330" style="background-color: lightblue">
@@ -116,6 +141,17 @@
             change: function(d, i) {updateYear()},
             slide: function(d, i) {updateYear()}
         });
+        $("#timeSlider2").slider({
+            range: "min",
+            max: 2007,
+            min: 1946,
+            orientation: "horizontal",
+            value: 1946,
+            animate: "fast",
+            step: 1,
+            change: function(d, i) {updateYear2()},
+            slide: function(d, i) {updateYear2()}
+        });
 
         // Set jumbotron to page height
         $(document).ready(function(){
@@ -131,12 +167,18 @@
         var lat_long;
 
         var map_vis;
+        var map_vis2;
         var bar_vis;
 
         function updateYear()
         {
             map_vis.wrangleData($("#timeSlider").slider("value"));
             d3.select("#timeRow").text("Yr: " + $("#timeSlider").slider("value"));
+        }
+        function updateYear2()
+        {
+            map_vis2.wrangleData($("#timeSlider2").slider("value"));
+            d3.select("#timeRow2").text("Yr: " + $("#timeSlider2").slider("value"));
         }
 
         function playMapVis()
@@ -157,6 +199,24 @@
             setTimeout(function() {playRecursive(x - 1);}, 1000);
         }
 
+        function playMapVis2()
+        {
+            $("#timeSlider2").slider("value", 1946);
+            playRecursive2(2007 - 1946);
+        }
+
+        function playRecursive2(x)
+        {
+            if (x <= 0)
+            {
+                $("#timeSlider2").slider("option", "disabled", false);
+                return;
+            }
+            $("#timeSlider2").slider("option", "disabled", true);
+            $("#timeSlider2").slider("value", $("#timeSlider2").slider("value") + 1);
+            setTimeout(function() {playRecursive2(x - 1);}, 1000);
+        }
+
         $(function()
         {
 
@@ -166,9 +226,12 @@
 
                 map_vis = new MapVis(d3.select("#mapVis"), countries_map, power_ranks, blips_data, at_war, lat_long, MyEventHandler);
                 map_vis.updateVis();
+                map_vis2 = new MapVis2(d3.select("#mapVis2"), countries_map, power_ranks, blips_data, at_war, lat_long, MyEventHandler);
+                map_vis2.updateVis();
 
                 // bar_vis = new BarVis(d3.select("#barVis"), power_ranks, MyEventHandler)
                 updateYear(1946);
+                updateYear2(1946);
 
                 $(MyEventHandler).bind("countryChanged", function(event, argument)
                 {
@@ -181,7 +244,7 @@
             }
 
             // call this function after both files are loaded -- error should be "null" if no error
-            var dataLoaded = function (error, _world, _powerrank, _blips, _deaths, _atwar, _milex, _latlong)
+            var dataLoaded = function (error, _world, _powerrank, _blips, _deaths, _atwar, _milex, _latlong, _miltot)
             {
                 if (!error)
                 {
@@ -191,6 +254,7 @@
                     deaths_data = _deaths;
                     at_war = _atwar;
                     lat_long = _latlong;
+                    console.log(_miltot);
 
                     initVis();
                 }
@@ -211,6 +275,7 @@
                     .defer(d3.json, 'data/at_war.json')
                     .defer(d3.json, 'data/milex.json')
                     .defer(d3.json, 'data/latlong.json')
+                    .defer(d3.json, 'data/mil-total.json')
                     .await(dataLoaded);
             }
 
