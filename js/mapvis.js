@@ -1,10 +1,12 @@
-MapVis = function(_parentElement, _countriesData, _powerRanks, _blips, _atwar, _eventHandler)
+MapVis = function(_parentElement, _countriesData, _powerRanks, _blips, _atwar, _latlong, _eventHandler)
 {
     this.parentElement = _parentElement;
     this.topo = _countriesData;
     this.power = _powerRanks;
     this.blips = _blips;
     this.atWar = _atwar;
+    this.latLong = _latlong;
+    this.countryNames = this.latLong.map(function(d, i) { return d.name; });
     this.eventHandler = _eventHandler;
     this.year = 1946;
 
@@ -14,6 +16,7 @@ MapVis = function(_parentElement, _countriesData, _powerRanks, _blips, _atwar, _
 
     this.graticule = d3.geo.graticule();
     this.tooltip = this.parentElement.append("div").attr("class", "tooltip hidden");
+    this.zoom = d3.behavior.zoom().scaleExtent([1,9]).on("zoom", this.move);
 
     this.offsetL = 30;
     this.offsetT = 20;
@@ -41,10 +44,50 @@ MapVis.prototype.setupVis = function()
         .attr("width", thatm.width)
         .attr("height", thatm.height)
         .attr("class", "mapSvg")
+        .call(thatm.zoom)
         // .on("click", click)
         .append("g");
 
     this.g = this.svg.append("g");
+
+    this.svg.append("linearGradient")
+          .attr("id", "temperature-gradient-green")
+          .attr("gradientUnits", "userSpaceOnUse")
+          .attr("x1", "5%").attr("y1", "0%")
+          .attr("x2", "22%").attr("y2", "0%")
+        .selectAll("stop")
+          .data([
+            {offset: "0%", color: "#e5f5f9"},
+            {offset: "14%", color: "#c7e9c0"},
+            {offset: "29%", color: "#a1d99b"},
+            {offset: "43%", color: "#74c476"},
+            {offset: "57%", color: "#41ab5d"},
+            {offset: "71%", color: "#238b45"},
+            {offset: "86%", color: "#006d2c"},
+            {offset: "100%", color: "#00441b"}
+          ])
+        .enter().append("stop")
+          .attr("offset", function(d) { return d.offset; })
+          .attr("stop-color", function(d) { return d.color; });
+    this.svg.append("linearGradient")
+          .attr("id", "temperature-gradient-red")
+          .attr("gradientUnits", "userSpaceOnUse")
+          .attr("x1", "5%").attr("y1", "0%")
+          .attr("x2", "22%").attr("y2", "0%")
+        .selectAll("stop")
+          .data([
+            {offset: "0%", color: "#fee0d2"},
+            {offset: "14%", color: "#fcbba1"},
+            {offset: "29%", color: "#fc9272"},
+            {offset: "43%", color: "#fb6a4a"},
+            {offset: "57%", color: "#ef3b2c"},
+            {offset: "71%", color: "#cb181d"},
+            {offset: "86%", color: "#a50f15"},
+            {offset: "100%", color: "#67000d"}
+          ])
+        .enter().append("stop")
+          .attr("offset", function(d) { return d.offset; })
+          .attr("stop-color", function(d) { return d.color; });
 }
 
 MapVis.prototype.initVis = function()
@@ -58,7 +101,19 @@ MapVis.prototype.wrangleData = function(_year)
 {
     var thatm = this;
     this.year = _year;
-    console.log(this.atWar);
+
+    var atwarthisyear = this.atWar.filter(function(d, i) {
+        return d.year == thatm.year;
+    })[0].enemies;
+
+    var allatwar = [];
+    d3.selectAll(".gline").remove();
+    atwarthisyear.forEach(function(d, i) {
+        allatwar.push(d.SideA);
+        allatwar.push(d.SideB);
+        thatm.addLine(d.SideA, d.SideB);
+    });
+
     // this.updateVis();
     this.pathee.style("fill", function(d, i) {
         var toColorCINC = thatm.power.filter(function(y,i) {
@@ -74,19 +129,38 @@ MapVis.prototype.wrangleData = function(_year)
         {
             return "#ffffff";
         }
+        else if ($.inArray(d.properties.name, allatwar) > -1)
+        {
+            if (toColorCINC[0].cinc < 0.05)
+                return "#fee0d2";
+            if (toColorCINC[0].cinc < 0.1)
+                return "#fcbba1";
+            if (toColorCINC[0].cinc < 0.15)
+                return "#fc9272";
+            if (toColorCINC[0].cinc < 0.2)
+                return "#fb6a4a";
+            if (toColorCINC[0].cinc < 0.25)
+                return "#ef3b2c";
+            if (toColorCINC[0].cinc < 0.3)
+                return "#cb181d";
+            if (toColorCINC[0].cinc < 0.35)
+                return "#a50f15";
+            if (toColorCINC[0].cinc < 0.4)
+                return "#67000d"; 
+        }
         else
         {
             // http://colorbrewer2.org/
             if (toColorCINC[0].cinc < 0.05)
-                return "#e5f5f9";
+                return "#f7fcf5";
             if (toColorCINC[0].cinc < 0.1)
-                return "#ccece6";
+                return "#e5f5e0";
             if (toColorCINC[0].cinc < 0.15)
-                return "#99d8c9";
+                return "#c7e9c0";
             if (toColorCINC[0].cinc < 0.2)
-                return "#66c2a4";
+                return "#a1d99b";
             if (toColorCINC[0].cinc < 0.25)
-                return "#41ae76";
+                return "#41ab5d";
             if (toColorCINC[0].cinc < 0.3)
                 return "#238b45";
             if (toColorCINC[0].cinc < 0.35)
@@ -94,8 +168,21 @@ MapVis.prototype.wrangleData = function(_year)
             if (toColorCINC[0].cinc < 0.4)
                 return "#00441b";
         }
+    })
+/*
+    .style("stroke", function(d, i) {
+        if ($.inArray(d.properties.name, allatwar) > -1)
+            return "#CC0000";
+        else
+            return "black";
+    })
+    .style("stroke-width", function(d, i) {
+        if ($.inArray(d.properties.name, allatwar) > -1)
+            return 2;
+        else
+            return 1.5;
     });
-    
+*/
     d3.selectAll(".gpoint").selectAll("circle")
         .transition().duration(1000)
         .attr("r", 0);
@@ -139,14 +226,13 @@ MapVis.prototype.updateVis = function()
             return y.name == d.properties.name;
         });//[0].cinc;
 
-        basicColor = d3.rgb("#00441b");
-
         if (toColorCINC.length == 0)
         {
             return "#ffffff";
         }
         else
         {
+            thatm.addCapital(toColorCINC[0].name);
             // http://colorbrewer2.org/
             if (toColorCINC[0].cinc < 0.05)
                 return "#e5f5f9";
@@ -182,6 +268,24 @@ MapVis.prototype.updateVis = function()
     .on("click", function(d,i) {
         console.log(d.properties.name)
     });
+
+
+    this.svg.append("rect")
+        .attr("x", 50)
+        .attr("y", thatm.height + 50)
+        .attr("height", 20)
+        .attr("width", 200)
+        .attr("fill", "url(#temperature-gradient-green)");
+    this.svg.append("rect")
+        .attr("x", 50)
+        .attr("y", thatm.height + 90)
+        .attr("height", 20)
+        .attr("width", 200)
+        .attr("fill", "url(#temperature-gradient-red)");
+
+    /*thatm.latLong.forEach(function(d) {
+        thatm.addCapital(d.name);
+    });*/
 }
 
 MapVis.prototype.addBlip = function(lat, lon, dat)
@@ -191,16 +295,11 @@ MapVis.prototype.addBlip = function(lat, lon, dat)
     var x = this.projection([lon,lat])[0];
     var y = this.projection([lon,lat])[1];
 
-    if (lat == -888)
-    {
-        console.log(dat);
-    }
-
     gpoint.append("svg:circle")
         .attr("cx", x)
         .attr("cy", y)
         .attr("class","point")
-        .attr("fill", "red")
+        .attr("fill", "#800000")
         .attr("r", 0).attr("opacity", 0)
         .transition().duration(1000)
         .attr("r", 5).attr("opacity", 100);
@@ -214,6 +313,114 @@ MapVis.prototype.addBlip = function(lat, lon, dat)
     .on("mouseout", function(d,i) {
         thatm.tooltip.classed("hidden", true);
     })
+}
+
+MapVis.prototype.addCapital = function(c1)
+{
+    var thatm = this;
+
+    if ($.inArray(c1, thatm.countryNames) < 0)
+    {
+        return;
+    }
+    var lat1 = thatm.latLong.filter(function(d) { return d.name == c1; })[0].latitude;
+    var lon1 = thatm.latLong.filter(function(d) { return d.name == c1; })[0].longitude;
+    var x1 = this.projection([lon1,lat1])[0];
+    var y1 = this.projection([lon1,lat1])[1];
+
+    var cappoint = this.g.append("g").attr("class", "cappoint");
+
+    cappoint.append("svg:circle")
+        .attr("cx", x1)
+        .attr("cy", y1)
+        .attr("class","point")
+        .attr("fill", "white")
+        .attr("stroke", "black")
+        .attr("r", 0).attr("opacity", 0)
+        .transition().duration(1000)
+        .attr("r", 2).attr("opacity", 100);
+
+    cappoint.on("mousemove", function(d,i) {
+            var mouse = d3.mouse(thatm.svg.node()).map(function(d) { return parseInt(d); });
+            thatm.tooltip.classed("hidden", false)
+                .attr("style", "left:"+(mouse[0]+thatm.offsetL)+"px;top:"+(mouse[1]+thatm.offsetT)+"px")
+                .html("Capital of " + c1);
+        })
+        .on("mouseout", function(d,i) {
+            thatm.tooltip.classed("hidden", true);
+        })
+}
+
+MapVis.prototype.addLine = function(c1, c2)
+{
+    thatm = this;
+    if ($.inArray(c2, thatm.countryNames) > -1 && $.inArray(c1, thatm.countryNames) > -1)
+    {
+        var lat1 = thatm.latLong.filter(function(d) { return d.name == c1; })[0].latitude;
+        var lon1 = thatm.latLong.filter(function(d) { return d.name == c1; })[0].longitude;
+        var lat2 = thatm.latLong.filter(function(d) { return d.name == c2; })[0].latitude;
+        var lon2 = thatm.latLong.filter(function(d) { return d.name == c2; })[0].longitude;
+        var gline = this.g.append("g").attr("class", "gline");
+        var x1 = this.projection([lon1,lat1])[0];
+        var y1 = this.projection([lon1,lat1])[1];
+        var x2 = this.projection([lon2,lat2])[0];
+        var y2 = this.projection([lon2,lat2])[1];
+
+        var cx1 = this.projection([0,0])[0];
+        var cy1 = this.projection([0,0])[1];
+
+        var gline = thatm.g.append("line").attr("class", "gline")
+            .attr("stroke", "red")
+            .attr("stroke-width", "2.5px")
+            .attr("x1", x1)
+            .attr("y1", y1)
+            .attr("x2", x2)
+            .attr("y2", y2);
+
+        gline.on("mousemove", function(d,i) {
+            var mouse = d3.mouse(thatm.svg.node()).map(function(d) { return parseInt(d); });
+            thatm.tooltip.classed("hidden", false)
+                .attr("style", "left:"+(mouse[0]+thatm.offsetL)+"px;top:"+(mouse[1]+thatm.offsetT)+"px")
+                .html(c1 + " vs. " + c2);
+        })
+        .on("mouseout", function(d,i) {
+            thatm.tooltip.classed("hidden", true);
+        })
+    }
+
+
+    /*.style("stroke", function(d, i) {
+        if ($.inArray(d.properties.name, allatwar) > -1)
+            return "red";
+        else
+            return "black";
+    })*/
+}
+
+MapVis.prototype.move = function ()
+{
+    // var thatm = this;
+    var t = d3.event.translate;
+    var s = d3.event.scale; 
+    zscale = s;
+    var h = thatm.height/4;
+
+
+    t[0] = Math.min(
+        (thatm.width/thatm.height)  * (s - 1), 
+        Math.max( thatm.width * (1 - s), t[0] )
+    );
+
+    t[1] = Math.min(
+        h * (s - 1) + h * s, 
+        Math.max(thatm.height  * (1 - s) - h * s, t[1])
+    );
+
+    map_vis.zoom.translate(t);
+    thatm.g.attr("transform", "translate(" + t + ")scale(" + s + ")");
+
+    d3.selectAll(".country").style("stroke-width", 1.5 / s);
+    d3.selectAll(".gline").style("stroke-width", 2.5 / s);
 }
 
 

@@ -82,7 +82,7 @@
             <svg height="20"></svg>
         </div>
         <div class="row">
-            <div class="col-md-12" id="mapVis">
+            <div class="col-md-6" id="mapVis">
             </div>
         </div>
         <div class="row">
@@ -128,6 +128,7 @@
         var blips_data;
         var deaths_data;
         var at_war;
+        var lat_long;
 
         var map_vis;
         var bar_vis;
@@ -140,8 +141,8 @@
 
         function playMapVis()
         {
-            $("#timeSlider").slider("value", 1989);
-            playRecursive(2007 - 1989);
+            $("#timeSlider").slider("value", 1946);
+            playRecursive(2007 - 1946);
         }
 
         function playRecursive(x)
@@ -163,7 +164,7 @@
             {
                 var MyEventHandler = new Object();
 
-                map_vis = new MapVis(d3.select("#mapVis"), countries_map, power_ranks, blips_data, at_war, MyEventHandler);
+                map_vis = new MapVis(d3.select("#mapVis"), countries_map, power_ranks, blips_data, at_war, lat_long, MyEventHandler);
                 map_vis.updateVis();
 
                 // bar_vis = new BarVis(d3.select("#barVis"), power_ranks, MyEventHandler)
@@ -189,6 +190,7 @@
                     blips_data = _blips;
                     deaths_data = _deaths;
                     at_war = _atwar;
+                    lat_long = _latlong;
 
                     initVis();
                 }
