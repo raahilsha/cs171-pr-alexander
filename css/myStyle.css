@@ -125,11 +125,13 @@ div.tooltip
   stroke: #ccc;
   stroke-width: 1px;
 }
-/*
-#barVis
+
+.iconPlain 
 {
-    position: relative;
-    left: -300px;
-    top: 0;
+    fill:black;   
 }
-*/
+
+.iconSelected 
+{
+    fill:orange;   
+}

@@ -266,7 +266,6 @@ MapVis.prototype.updateVis = function()
         thatm.tooltip.classed("hidden", true);
     })
     .on("click", function(d,i) {
-        console.log(d.properties.name)
     });
 
     // Make the legend

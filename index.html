@@ -24,6 +24,7 @@
     <script src = "js/mapvis.js"></script>
     <script src = "js/mapvis2.js"></script>
     <script src = "js/barvis.js"></script>
+    <script src = "js/pictvis.js"></script>
 
     <!-- add own stylesheet-->
     <link rel="stylesheet" type="text/css" href="css/myStyle.css">
@@ -135,17 +136,17 @@
         </div>
         <div class="row">
             <div class="col-md-4" id="leftVis">
-                <svg width="390" height="330" style="background-color: lightblue">
+                <svg width="390" height="900" style="background-color: lightblue">
                     <text x="50" y="50">Left Selected Country</text>
                 </svg>
             </div>
             <div class="col-md-4" id="compareVis">
-                <svg width="390" height="330" style="background-color: lightcoral">
+                <svg width="390" height="900" style="background-color: lightcoral">
                     <text x="50" y="50">Compare Selected Countries</text>
                 </svg>
             </div>
             <div class="col-md-4" id="rightVis">
-                <svg width="390" height="330" style="background-color: lightgreen">
+                <svg width="390" height="900" style="background-color: lightgreen">
                     <text x="50" y="50">Right Selected Country</text>
                 </svg>
             </div>
@@ -167,20 +168,11 @@
             </div>
         </div>
         <div class="row">
-            <div class="col-md-4" id="leftVis">
-                <svg width="390" height="330" style="background-color: lightblue">
-                    <text x="50" y="50">Left Selected Country</text>
-                </svg>
-            </div>
-            <div class="col-md-4" id="compareVis">
-                <svg width="390" height="330" style="background-color: lightcoral">
-                    <text x="50" y="50">Compare Selected Countries</text>
-                </svg>
-            </div>
-            <div class="col-md-4" id="rightVis">
-                <svg width="390" height="330" style="background-color: lightgreen">
-                    <text x="50" y="50">Right Selected Country</text>
-                </svg>
+            <div class="col-md-2"><p id="timeRow4" style="position: relative; top: 75%; transform: translateY(-25%); font-size: 18px">Year:</p></div>
+            <div class="col-md-10" id="timeSlider4"></div>
+        </div>
+        <div class="row">
+            <div class="col-md-12" id="pictVis">
             </div>
         </div>
     </div>
@@ -208,6 +200,18 @@
             change: function(d, i) {updateYear2()},
             slide: function(d, i) {updateYear2()}
         });
+        $("#timeSlider4").slider({
+            range: "min",
+            max: 2007,
+            min: 1946,
+            orientation: "horizontal",
+            values: [1946, 2007],
+            range: true,
+            animate: "fast",
+            step: 1,
+            change: function(d, i) {updateYear4()},
+            slide: function(d, i) {updateYear4()}
+        });
 
         // Set jumbotron to page height
         $(document).ready(function(){
@@ -225,6 +229,7 @@
         var at_war;
         var lat_long;
         var allies;
+        var mil_ex;
 
         var map_vis;
         var map_vis2;
@@ -240,6 +245,12 @@
         {
             d3.select("#timeRow2").text("Yr: " + $("#timeSlider2").slider("value"));
             map_vis2.wrangleData($("#timeSlider2").slider("value"));
+        }
+
+        function updateYear4()
+        {
+            d3.select("#timeRow4").text("Years: " + $("#timeSlider4").slider("values", 0) + " - " + $("#timeSlider4").slider("values", 1));
+            pict_vis.wrangleData($("#timeSlider4").slider("values", 0), $("#timeSlider4").slider("values", 1));
         }
 
         function playMapVis()
@@ -289,10 +300,13 @@
                 map_vis.updateVis();
                 map_vis2 = new MapVis2(d3.select("#mapVis2"), countries_map, power_ranks, blips_data, at_war, lat_long, allies, MyEventHandler);
                 map_vis2.updateVis();
+                pict_vis = new PictVis(d3.select("#pictVis"), deaths_data, mil_ex, MyEventHandler);
+                pict_vis.updateVis();
 
                 // bar_vis = new BarVis(d3.select("#barVis"), power_ranks, MyEventHandler)
-                updateYear(1946);
-                updateYear2(1946);
+                updateYear();
+                updateYear2();
+                updateYear4();
 
                 $(MyEventHandler).bind("countryChanged", function(event, argument)
                 {
@@ -316,6 +330,7 @@
                     at_war = _atwar;
                     lat_long = _latlong;
                     allies = _alliances;
+                    mil_ex = _milex;
 
                     initVis();
                 }
