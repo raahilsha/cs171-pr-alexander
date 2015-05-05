@@ -318,9 +318,9 @@
                 pict_vis2 = new PictVis2(d3.select("#pictVis2"), deaths_data, mil_ex, MyEventHandler);
                 pict_vis2.updateVis();
 
-                lineTopVis = new LineVis(d3.select("#topVis"), miltot, 0.211, 1, lat_long, MyEventHandler);
+                lineTopVis = new LineVis(d3.select("#topVis"), miltot, 0.1, 1, lat_long, MyEventHandler);
                 lineMidVis = new LineVis(d3.select("#midVis"), milgdp, 0.4, 2, lat_long, MyEventHandler);
-                lineBotVis = new LineVis(d3.select("#botVis"), milirs, 18.16, 3, lat_long, MyEventHandler);
+                lineBotVis = new LineVis(d3.select("#botVis"), milirs, 1.55, 3, lat_long, MyEventHandler);
 
                 // bar_vis = new BarVis(d3.select("#barVis"), power_ranks, MyEventHandler)
                 updateYear();
