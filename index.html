@@ -25,6 +25,7 @@
     <script src = "js/mapvis2.js"></script>
     <script src = "js/barvis.js"></script>
     <script src = "js/pictvis.js"></script>
+    <script src = "js/pictvis2.js"></script>
 
     <!-- add own stylesheet-->
     <link rel="stylesheet" type="text/css" href="css/myStyle.css">
@@ -169,11 +170,18 @@
         </div>
         <div class="row">
             <div class="col-md-2"><p id="timeRow4" style="position: relative; top: 75%; transform: translateY(-25%); font-size: 18px">Year:</p></div>
-            <div class="col-md-10" id="timeSlider4"></div>
+            <div class="col-md-9" id="timeSlider4"></div>
         </div>
         <div class="row">
             <div class="col-md-12" id="pictVis">
             </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12" id="pictVis2">
+            </div>
+        </div>
+        <div class="row">
+            <svg height="500"></svg>
         </div>
     </div>
     <script>
@@ -230,6 +238,8 @@
         var lat_long;
         var allies;
         var mil_ex;
+        var miltot;
+        var milgdp;
 
         var map_vis;
         var map_vis2;
@@ -251,6 +261,7 @@
         {
             d3.select("#timeRow4").text("Years: " + $("#timeSlider4").slider("values", 0) + " - " + $("#timeSlider4").slider("values", 1));
             pict_vis.wrangleData($("#timeSlider4").slider("values", 0), $("#timeSlider4").slider("values", 1));
+            pict_vis2.wrangleData($("#timeSlider4").slider("values", 0), $("#timeSlider4").slider("values", 1));
         }
 
         function playMapVis()
@@ -302,6 +313,8 @@
                 map_vis2.updateVis();
                 pict_vis = new PictVis(d3.select("#pictVis"), deaths_data, mil_ex, MyEventHandler);
                 pict_vis.updateVis();
+                pict_vis2 = new PictVis2(d3.select("#pictVis2"), deaths_data, mil_ex, MyEventHandler);
+                pict_vis2.updateVis();
 
                 // bar_vis = new BarVis(d3.select("#barVis"), power_ranks, MyEventHandler)
                 updateYear();
@@ -319,7 +332,7 @@
             }
 
             // call this function after both files are loaded -- error should be "null" if no error
-            var dataLoaded = function (error, _world, _powerrank, _blips, _deaths, _atwar, _milex, _latlong, _miltot, _alliances)
+            var dataLoaded = function (error, _world, _powerrank, _blips, _deaths, _atwar, _milex, _latlong, _miltot, _alliances, _milex_gdp)
             {
                 if (!error)
                 {
@@ -331,6 +344,9 @@
                     lat_long = _latlong;
                     allies = _alliances;
                     mil_ex = _milex;
+
+                    miltot = _miltot;
+                    milgdp = _milex_gdp;
 
                     initVis();
                 }
@@ -353,6 +369,7 @@
                     .defer(d3.json, 'data/latlong.json')
                     .defer(d3.json, 'data/mil-total.json')
                     .defer(d3.json, 'data/alliances.json')
+                    .defer(d3.json, 'data/milex-gdp.json')
                     .await(dataLoaded);
             }
 

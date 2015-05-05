@@ -1,4 +1,4 @@
-PictVis = function(_parentElement, _deaths, _milex, _eventHandler)
+PictVis2 = function(_parentElement, _deaths, _milex, _eventHandler)
 {
     this.parentElement = _parentElement;
     this.deaths = _deaths;
@@ -22,33 +22,35 @@ PictVis = function(_parentElement, _deaths, _milex, _eventHandler)
 /**
  * Method that sets up the SVG and the variables
  */
-PictVis.prototype.initVis = function()
+PictVis2.prototype.initVis = function()
 {
     var thatp = this;
     this.wrangleData(this.year1, this.year2);
 
     this.svg = this.parentElement.append("svg")
-                                .attr("viewBox", "0 0 250 55");
+                                .attr("viewBox", "0 0 250 55")
 
     this.svg.append("defs")
             .append("g")
-            .attr("id","iconCustom")
+            .attr("id","iconCustom2")
             .append("path")
-            .attr("d","M3.5,2H2.7C3,1.8,3.3,1.5,3.3,1.1c0-0.6-0.4-1-1-1c-0.6,0-1,0.4-1,1c0,0.4,0.2,0.7,0.6,0.9H1.1C0.7,2,0.4,2.3,0.4,2.6v1.9c0,0.3,0.3,0.6,0.6,0.6h0.2c0,0,0,0.1,0,0.1v1.9c0,0.3,0.2,0.6,0.3,0.6h1.3c0.2,0,0.3-0.3,0.3-0.6V5.3c0,0,0-0.1,0-0.1h0.2c0.3,0,0.6-0.3,0.6-0.6V2.6C4.1,2.3,3.8,2,3.5,2z");
-            // Clip Art from: http://bl.ocks.org/alansmithy/d832fc03f6e6a91e99f4
+            .attr("d", "M4.529,1.669c0.131,0,0.238,0.107,0.238,0.238c0,0.132-0.106,0.239-0.238,0.239H2.146c-0.131,0-0.238-0.107-0.238-0.239 c0-0.131,0.107-0.238,0.238-0.238H4.529z M4.667,2.385h-2.66C0.827,3.247,0,5.071,0,6.231C0,7.79,1.495,7.625,3.337,7.625 c1.844,0,3.338,0.166,3.338-1.394C6.675,5.071,5.848,3.247,4.667,2.385z M2.007,1.431h2.66c0,0,1.055-0.919,0.577-1.322 S3.71,0.556,3.337,0.526c-0.372,0.03-1.43-0.82-1.907-0.418C0.955,0.511,2.007,1.431,2.007,1.431z");
+
+
+            // Clip Art from: http://simpleicon.com/wp-content/uploads/money-bag-2.svg
 
     var numRows = 3;
     var numCols = 35;
     var pictIndex = d3.range(numCols * numRows);
-    this.peopleperpict = 10452501 / (numCols * numRows);
+    this.moneyperpict = 29170479345000 / (numCols * numRows);
 
     this.svg.append("g")
-            .attr("id", "pictoLayer")
+            .attr("id", "pictoLayer2")
             .selectAll("use")
             .data(pictIndex)
             .enter()
             .append("use")
-                .attr("xlink:href","#iconCustom")
+                .attr("xlink:href","#iconCustom2")
                 .attr("id", function(d) {
                     return "icon" + d;
                 })
@@ -65,7 +67,7 @@ PictVis.prototype.initVis = function()
     this.legend = this.svg.append("g")
             .attr("id", "pictLegend");
     this.legend.append("use")
-            .attr("xlink:href","#iconCustom")
+            .attr("xlink:href","#iconCustom2")
             .attr("x", 0)
             .attr("y", 40)
             .classed("iconPlain", true);
@@ -74,12 +76,12 @@ PictVis.prototype.initVis = function()
             .attr("y", 40 + 5.5)
             .style("text-anchor", "left")
             .style("font-size", "5px")
-            .text(" = " + Math.floor(thatp.peopleperpict) + " people");
+            .text(" = $" + Math.floor(thatp.moneyperpict / 1000000) / 1000 + " billion");
 
 }
 
 
-PictVis.prototype.wrangleData = function(_year1, _year2)
+PictVis2.prototype.wrangleData = function(_year1, _year2)
 {
     var thatp = this;
     this.year1 = _year1;
@@ -106,13 +108,13 @@ PictVis.prototype.wrangleData = function(_year1, _year2)
  * the drawing function - should use the D3 selection, enter, exit
  * @param _options -- only needed if different kinds of updates are needed
  */
-PictVis.prototype.updateVis = function()
+PictVis2.prototype.updateVis = function()
 {
     var thatp = this;
-    d3.select("#pictoLayer").selectAll("use").attr("class",function(d,i){
-       if (d * thatp.peopleperpict < thatp.deathsdisp) 
+    d3.select("#pictoLayer2").selectAll("use").attr("class",function(d,i){
+       if (d * thatp.moneyperpict < thatp.milexdisp) 
        {
-           return "iconSelected";
+           return "iconSelectedMoney";
        }
        else
        {
@@ -127,7 +129,7 @@ PictVis.prototype.updateVis = function()
  * be defined here.
  * @param selection
  */
-PictVis.prototype.onSelectionChange = function ()
+PictVis2.prototype.onSelectionChange = function ()
 {
 }
 
