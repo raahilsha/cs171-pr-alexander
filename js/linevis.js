@@ -91,8 +91,29 @@ LineVis.prototype.drawLines = function()
     var thatl = this;
     this.countryNames.forEach(function(na)
     {
-        console.log(na);
-        console.log(thatl.mydata[0][na].x);
+        if (thatl.mydata[0][na] != null)
+        {
+            var line = d3.svg.line()
+                            .x(function(d) { return thatl.x(d.x); })
+                            .y(function(d) { return thatl.y(d.y); });
+
+            for (var i = 0; i < thatl.mydata[0][na].x.length - 1; i++)
+            {
+                thatl.svg.append("line")
+                    .attr("class", "line")
+                    .attr("x1", thatl.x(thatl.mydata[0][na].x[i]))
+                    .attr("x2", thatl.x(thatl.mydata[0][na].x[i + 1]))
+                    .attr("y1", thatl.y(thatl.mydata[0][na].y[i]))
+                    .attr("y2", thatl.y(thatl.mydata[0][na].y[i + 1]))
+            };
+
+            /* thatl.svg.append("path")
+                .datum(thatl.mydata[0][na])
+                .attr("class", "line")
+                .attr("d", line); */
+
+            console.log(thatl.mydata[0][na]);
+        }
     });
 }
 
