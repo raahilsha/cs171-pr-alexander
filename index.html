@@ -42,8 +42,8 @@
 
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-2">
           <ul class="nav navbar-nav">
-            <li class="active"><a href="#">Link</a></li>
-            <li><a href="#">Link</a></li>
+            <li class="active"><a href="#">Home</a></li>
+            <li><a href="#viz1">Country Powers</a></li>
           </ul>
           <ul class="nav navbar-nav navbar-right">
             <li><a href="#">Link</a></li>
@@ -55,10 +55,26 @@
     <div class="row">
         <svg height="20"></svg>
     </div>
-    <div class="maintitle"><h1>Alexander: The <i>What If?</i> of War</h1></div>
     <div class="container">
+        <div class="jumbotron" id="jumbo1">
+              <h1>Alexander: The <i>What If?</i> of War</h1>
+              <p>This is a simple hero unit, a simple jumbotron-style component for calling extra attention to featured content or information.</p>
+              <p><a class="btn btn-primary btn-lg" href="#viz1">Learn more</a></p>
+        </div>
+
+        <a name="viz1"></a>
+        <div class="row"><svg height="0"></svg></div>
+
+        <div class="page-header">
+            <div class="row">
+                <div class="col-lg-12">
+                  <h1 id="buttons">Vizualization 1</h1>
+                </div>
+            </div>
+        </div>
+
         <div class="row">
-            <div class="col-md-1"><p style="position: relative; top: 75%; transform: translateY(-25%); font-size: 18px">&nbsp&nbsp&nbsp&nbspYear:</p></div>
+            <div class="col-md-1"><p id="timeRow" style="position: relative; top: 75%; transform: translateY(-25%); font-size: 18px">Year:</p></div>
             <div class="col-md-10" id="timeSlider"></div>
             <button onclick="playMapVis()" type="submit" class="btn btn-success">Play</button>
         </div>
@@ -71,17 +87,17 @@
         </div>
         <div class="row">
             <div class="col-md-4" id="leftVis">
-                <svg width="300" height="330" style="background-color: lightblue">
+                <svg width="390" height="330" style="background-color: lightblue">
                     <text x="50" y="50">Left Selected Country</text>
                 </svg>
             </div>
             <div class="col-md-4" id="compareVis">
-                <svg width="300" height="330" style="background-color: lightcoral">
+                <svg width="390" height="330" style="background-color: lightcoral">
                     <text x="50" y="50">Compare Selected Countries</text>
                 </svg>
             </div>
             <div class="col-md-4" id="rightVis">
-                <svg width="300" height="330" style="background-color: lightgreen">
+                <svg width="390" height="330" style="background-color: lightgreen">
                     <text x="50" y="50">Right Selected Country</text>
                 </svg>
             </div>
@@ -95,10 +111,15 @@
             min: 1946,
             orientation: "horizontal",
             value: 1946,
-            animate: "slow",
+            animate: "fast",
             step: 1,
             change: function(d, i) {updateYear()},
             slide: function(d, i) {updateYear()}
+        });
+
+        // Set jumbotron to page height
+        $(document).ready(function(){
+            $('#jumbo1').height($(window).height());
         });
 
         // variables keeping global knowledge of the data
@@ -106,6 +127,7 @@
         var power_ranks;
         var blips_data;
         var deaths_data;
+        var at_war;
 
         var map_vis;
         var bar_vis;
@@ -113,25 +135,25 @@
         function updateYear()
         {
             map_vis.wrangleData($("#timeSlider").slider("value"));
-            d3.select(".ui-slider-range").select("svg").remove();
-            d3.select(".ui-slider-range").append("svg")
-                                .attr("width", 1500)
-                                .attr("height", 40)
-                                .append("text")
-                                .attr("x", 937)
-                                .attr("y", 30)
-                                .style("font-size","16px")
-                                .text($("#timeSlider").slider("value"));
+            d3.select("#timeRow").text("Yr: " + $("#timeSlider").slider("value"));
         }
 
         function playMapVis()
         {
-            $("#timeSlider").slider("value", 1946);
-            d3.select("#timeSlider").transition().attr("value", 1946).transition().delay(5000).attr("value", 2007);
-            //d3.select(".slider-input").attr("value", 1946);
-            //console.log(d3.select(".slider-input"));
-            //$("#mySlider").slider("value", $("#mySlider").slider("option", "min") );
-            // map_vis.playVis();
+            $("#timeSlider").slider("value", 1989);
+            playRecursive(2007 - 1989);
+        }
+
+        function playRecursive(x)
+        {
+            if (x <= 0)
+            {
+                $("#timeSlider").slider("option", "disabled", false);
+                return;
+            }
+            $("#timeSlider").slider("option", "disabled", true);
+            $("#timeSlider").slider("value", $("#timeSlider").slider("value") + 1);
+            setTimeout(function() {playRecursive(x - 1);}, 1000);
         }
 
         $(function()
@@ -141,10 +163,10 @@
             {
                 var MyEventHandler = new Object();
 
-                map_vis = new MapVis(d3.select("#mapVis"), countries_map, power_ranks, MyEventHandler);
+                map_vis = new MapVis(d3.select("#mapVis"), countries_map, power_ranks, blips_data, at_war, MyEventHandler);
                 map_vis.updateVis();
 
-                bar_vis = new BarVis(d3.select("#barVis"), power_ranks, MyEventHandler)
+                // bar_vis = new BarVis(d3.select("#barVis"), power_ranks, MyEventHandler)
                 updateYear(1946);
 
                 $(MyEventHandler).bind("countryChanged", function(event, argument)
@@ -166,7 +188,7 @@
                     power_ranks = _powerrank;
                     blips_data = _blips;
                     deaths_data = _deaths;
-                    console.log(_latlong);
+                    at_war = _atwar;
 
                     initVis();
                 }

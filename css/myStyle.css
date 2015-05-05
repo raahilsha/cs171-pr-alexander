@@ -7,6 +7,11 @@ body
     font: 10px sans-serif;
 }
 
+.sliderFont
+{
+    font: 18px sans-serif;
+}
+
 input[type=range]
 {
   vertical-align: top;
@@ -31,6 +36,7 @@ input[type=range]
 {
     fill: none;
     stroke: #000;
+    stroke-width: 1.5px;
     shape-rendering: crispEdges;
 }
 
@@ -52,7 +58,7 @@ input[type=range]
 .country:hover
 {
   stroke: #fff;
-  stroke-width: 1.5px;
+  stroke-width: 2.5px;
 }
 
 .text
