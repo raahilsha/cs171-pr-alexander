@@ -26,6 +26,7 @@
     <script src = "js/barvis.js"></script>
     <script src = "js/pictvis.js"></script>
     <script src = "js/pictvis2.js"></script>
+    <script src = "js/linevis.js"></script>
 
     <!-- add own stylesheet-->
     <link rel="stylesheet" type="text/css" href="css/myStyle.css">
@@ -135,21 +136,17 @@
                 </div>
             </div>
         </div>
+
         <div class="row">
-            <div class="col-md-4" id="leftVis">
-                <svg width="390" height="900" style="background-color: lightblue">
-                    <text x="50" y="50">Left Selected Country</text>
-                </svg>
+            <div class="col-md-12" id="topVis">
             </div>
-            <div class="col-md-4" id="compareVis">
-                <svg width="390" height="900" style="background-color: lightcoral">
-                    <text x="50" y="50">Compare Selected Countries</text>
-                </svg>
+        </div>
+        <div class="row">
+            <div class="col-md-12" id="midVis">
             </div>
-            <div class="col-md-4" id="rightVis">
-                <svg width="390" height="900" style="background-color: lightgreen">
-                    <text x="50" y="50">Right Selected Country</text>
-                </svg>
+        </div>
+        <div class="row">
+            <div class="col-md-12" id="botVis">
             </div>
         </div>
 
@@ -244,6 +241,11 @@
         var map_vis;
         var map_vis2;
         var bar_vis;
+        var pict_vis;
+        var pict_vis2;
+        var lineTopVis;
+        var lineMidVis;
+        var lineBotVis;
 
         function updateYear()
         {
@@ -316,6 +318,10 @@
                 pict_vis2 = new PictVis2(d3.select("#pictVis2"), deaths_data, mil_ex, MyEventHandler);
                 pict_vis2.updateVis();
 
+                lineTopVis = new LineVis(d3.select("#topVis"), miltot, 0.211, 1, lat_long, MyEventHandler);
+                lineMidVis = new LineVis(d3.select("#midVis"), milgdp, 0.4, 2, lat_long, MyEventHandler);
+                lineBotVis = new LineVis(d3.select("#botVis"), milirs, 18.16, 3, lat_long, MyEventHandler);
+
                 // bar_vis = new BarVis(d3.select("#barVis"), power_ranks, MyEventHandler)
                 updateYear();
                 updateYear2();
@@ -323,16 +329,14 @@
 
                 $(MyEventHandler).bind("countryChanged", function(event, argument)
                 {
-                    // var beginTime = argument.extent()[0];
-                    // var endTime = argument.extent()[1];
-
-                    // age_vis.onSelectionChange(beginTime, endTime);
-                    // prio_vis.onSelectionChange(beginTime, endTime);
+                    lineTopVis.onSelectionChange(argument);
+                    lineMidVis.onSelectionChange(argument);
+                    lineBotVis.onSelectionChange(argument);
                 });
             }
 
             // call this function after both files are loaded -- error should be "null" if no error
-            var dataLoaded = function (error, _world, _powerrank, _blips, _deaths, _atwar, _milex, _latlong, _miltot, _alliances, _milex_gdp)
+            var dataLoaded = function (error, _world, _powerrank, _blips, _deaths, _atwar, _milex, _latlong, _miltot, _alliances, _milex_gdp, _irst)
             {
                 if (!error)
                 {
@@ -347,6 +351,9 @@
 
                     miltot = _miltot;
                     milgdp = _milex_gdp;
+                    milirs = _irst;
+
+                    console.log(milirs);
 
                     initVis();
                 }
@@ -370,6 +377,7 @@
                     .defer(d3.json, 'data/mil-total.json')
                     .defer(d3.json, 'data/alliances.json')
                     .defer(d3.json, 'data/milex-gdp.json')
+                    .defer(d3.json, 'data/irst-capita.json')
                     .await(dataLoaded);
             }
 

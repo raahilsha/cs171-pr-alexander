@@ -70,7 +70,7 @@ PictVis2.prototype.initVis = function()
             .attr("xlink:href","#iconCustom2")
             .attr("x", 0)
             .attr("y", 40)
-            .classed("iconPlain", true);
+            .classed("iconSelectedMoney", true);
     this.legend.append("text")
             .attr("x", 7)
             .attr("y", 40 + 5.5)

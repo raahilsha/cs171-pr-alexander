@@ -68,7 +68,7 @@ PictVis.prototype.initVis = function()
             .attr("xlink:href","#iconCustom")
             .attr("x", 0)
             .attr("y", 40)
-            .classed("iconPlain", true);
+            .classed("iconSelected", true);
     this.legend.append("text")
             .attr("x", 7)
             .attr("y", 40 + 5.5)
