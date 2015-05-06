@@ -1,3 +1,7 @@
+// NOTE: Comments are not included in this file.
+// This file and mapvis.js are similar except for the data used and the lines drawn on the map. The only difference can be found when adding color to the lines to differentiate between different types of alliances.
+// Please read the comments in mapvis.js if you are curious about our code.
+
 MapVis2 = function(_parentElement, _countriesData, _powerRanks, _blips, _atwar, _latlong, _allies, _eventHandler)
 {
     this.parentElement = _parentElement;
@@ -48,7 +52,6 @@ MapVis2.prototype.setupVis = function()
         .attr("height", thatm.height)
         .attr("class", "mapSvg2")
         .call(thatm.zoom)
-        // .on("click", click)
         .append("g");
 
     this.g = this.svg.append("g");
@@ -124,14 +127,13 @@ MapVis2.prototype.wrangleData = function(_year)
         thatm.addLine(d.state_name1, d.state_name2, newcol, d.kind);
     });
 
-    // this.updateVis();
     this.pathee.style("fill", function(d, i) {
         var toColorCINC = thatm.power.filter(function(y,i) {
             return y.year == thatm.year;
         })[0]
         .countries.filter(function(y,i) {
             return y.name == d.properties.name;
-        });//[0].cinc;
+        });
 
         basicColor = d3.rgb("#00441b");
 
@@ -160,7 +162,6 @@ MapVis2.prototype.wrangleData = function(_year)
         }
         else
         {
-            // http://colorbrewer2.org/
             if (toColorCINC[0].cinc < 0.05)
                 return "#f7fcf5";
             if (toColorCINC[0].cinc < 0.1)
@@ -187,8 +188,6 @@ MapVis2.prototype.updateVis = function()
     d3.select('svg.mapSvg2').remove();
     this.setupVis();
 
-    // Map Code From: http://techslides.com/d3-map-starter-kit
-
     this.svg.append("path")
         .datum(thatm.graticule)
         .attr("class", "graticule")
@@ -212,7 +211,7 @@ MapVis2.prototype.updateVis = function()
         })[0]
         .countries.filter(function(y,i) {
             return y.name == d.properties.name;
-        });//[0].cinc;
+        });
 
         if (toColorCINC.length == 0)
         {
@@ -221,7 +220,6 @@ MapVis2.prototype.updateVis = function()
         else
         {
             thatm.addCapital(toColorCINC[0].name);
-            // http://colorbrewer2.org/
             if (toColorCINC[0].cinc < 0.05)
                 return "#e5f5f9";
             if (toColorCINC[0].cinc < 0.1)
@@ -256,7 +254,6 @@ MapVis2.prototype.updateVis = function()
     .on("click", function(d,i) {
     });
 
-    // Make the legend
     var legendCenter = 80;
     var textCorrection = 15;
     this.svg.append("rect")
@@ -450,8 +447,6 @@ MapVis2.prototype.addLine = function(c1, c2, color, kind)
 
 MapVis2.prototype.move = function ()
 {
-    // var thatm = this;
-    
     var t = d3.event.translate;
     var s = d3.event.scale;
     this.zscale2 = s;
@@ -483,7 +478,6 @@ MapVis2.prototype.onSelectionChange = function ()
 
 var getInnerWidth = function(element)
 {
-    // var style = window.getComputedStyle(element.node(), null);
     return 1200;
     return parseInt(style.getPropertyValue('width'));
 }

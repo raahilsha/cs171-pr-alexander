@@ -1,8 +1,4 @@
-/**
- * BarVis object
- * @constructor
- */
-
+// Constructor for LineVis
 LineVis = function(_parentElement, _mydata, _maxVal, _type, _latlong, _eventHandler)
 {
     this.parentElement = _parentElement;
@@ -28,9 +24,7 @@ LineVis = function(_parentElement, _mydata, _maxVal, _type, _latlong, _eventHand
 }
 
 
-/**
- * Method that sets up the SVG and the variables
- */
+// Sets up the main SVG file
 LineVis.prototype.initVis = function()
 {
     var thatl = this;
@@ -45,16 +39,20 @@ LineVis.prototype.initVis = function()
     this.drawLines();
 }
 
+// Draws the axes and creates the scales
 LineVis.prototype.setupAxes = function()
 {
     
     var thatl = this;
+
+    // Creates the scales
     this.x = d3.scale.linear()
         .range([0, thatl.width]);
 
     this.y = d3.scale.linear()
         .range([thatl.height, 0]);
 
+    // Creates the axes
     this.xAxis = d3.svg.axis()
         .scale(thatl.x)
         .orient("bottom");
@@ -66,6 +64,7 @@ LineVis.prototype.setupAxes = function()
     this.x.domain([1946, 2007]);
     this.y.domain([0, thatl.maxVal]);
 
+    // Draws the axes
     this.svg.append("g")
           .attr("class", "x axis")
           .attr("transform", "translate(0," + thatl.height + ")")
@@ -98,16 +97,14 @@ LineVis.prototype.drawLines = function()
     {
         if (thatl.mydata[0][na] != null)
         {
-            var line = d3.svg.line()
-                            .x(function(d) { return thatl.x(d.x); })
-                            .y(function(d) { return thatl.y(d.y); });
-
+        	// Circle to signify the start date of the data
             thatl.svg.append("circle")
                 .attr("cx", thatl.x(thatl.mydata[0][na].x[0]))
                 .attr("cy", thatl.y(thatl.mydata[0][na].y[0]))
                 .attr("r", 3)
                 .attr("fill", "black");
 
+            // We had trouble setting up a path, so we just drew one manually instead
             for (var i = 0; i < thatl.mydata[0][na].x.length - 1; i++)
             {
                 thatl.svg.append("line")
@@ -117,7 +114,7 @@ LineVis.prototype.drawLines = function()
                     .attr("y1", thatl.y(thatl.mydata[0][na].y[i]))
                     .attr("y2", thatl.y(thatl.mydata[0][na].y[i + 1]))
                     .attr("namee", na)
-
+                    // Display country name when hovering over the line. Also triggers eventHandler
                     .on("mousemove", function(d,i) {
                         $(thatl.eventHandler).trigger("countryChanged", na);
                         var mouse = d3.mouse(thatl.svg.node()).map(function(d) { return parseInt(d); });
@@ -139,20 +136,11 @@ LineVis.prototype.wrangleData = function(_year)
 {
 }
 
-/**
- * the drawing function - should use the D3 selection, enter, exit
- * @param _options -- only needed if different kinds of updates are needed
- */
 LineVis.prototype.updateVis = function()
 {
 }
 
-/**
- * Gets called by event handler and should create new aggregated data
- * aggregation is done by the function "aggregate(filter)". Filter has to
- * be defined here.
- * @param selection
- */
+// Updates which lines are selected based on an event
 LineVis.prototype.onSelectionChange = function (_name)
 {
     var thatl = this;
@@ -168,14 +156,3 @@ LineVis.prototype.onSelectionChange = function (_name)
         }
     })
 }
-
-/**
- * Helper function thatb gets the width of a D3 element
- */
- /*
-var getInnerWidth = function(element)
-{
-    var style = window.getComputedStyle(element.node(), null);
-    return parseInt(style.getPropertyValue('width'));
-}
-*/
