@@ -1,0 +1,16 @@
+0th:
+Our visualiztion integrates different kinds of data about war since the end of World War II to communicate the price that humanity pays for wars.
+
+1st:
+Our first view interactively shows internal and international conflicts from 1946 to 2007. The main purpose of this view is to demonstrate that the wars had by no means stopped, and also to allow the user to trace relationships between state power and warfare. Since 1989 we have the data about individual battles, which are animated on the map.
+
+2nd:
+These coordinated views show the individual history of spending resources on military for every country, as well as large-scale patterns that apply accross nations (black dots singnify the beginning of each country's record). These represent timeseries of percent of population involvedin military, percent of gdp spent on military and iron+steel production per capita. One can initially see the world's patterns of military spending and can access details by hovering over lines that display interesting behavior.
+
+3rd
+This visualization provides a world-wide history of military alliances. Each line represents a bi-lateral alliance of one of the 4 kinds, and one can easily trace large changes in international structure (such as the fall of the Soviet Union and the formation of the CIS in 1993). The most important conclusion is that countries seemed to be more and more willing to cooperate.
+
+4th
+Our final view shows the impact of wars since 1946 and invites one to imagine the world where wars would be stopped - even if for a tiny period of time.
+
+Thank you, and feel free to check out our website to find out more!
