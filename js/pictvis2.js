@@ -1,3 +1,7 @@
+// NOTE: Comments are not included in this file.
+// This file and pictvis.js are similar except for the data used and the pictures drawn. The only difference between this file and pictvis.js is the SVG that is drawn as a picture, its color, and its legend.
+// Please read the comments in pictvis.js if you are curious about our code.
+
 PictVis2 = function(_parentElement, _deaths, _milex, _eventHandler)
 {
     this.parentElement = _parentElement;

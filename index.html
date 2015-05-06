@@ -23,7 +23,6 @@
     <!-- add own vis classes-->
     <script src = "js/mapvis.js"></script>
     <script src = "js/mapvis2.js"></script>
-    <script src = "js/barvis.js"></script>
     <script src = "js/pictvis.js"></script>
     <script src = "js/pictvis2.js"></script>
     <script src = "js/linevis.js"></script>
@@ -240,6 +239,7 @@
         <li>Gymnosophist Image - <a href="http://upload.wikimedia.org/wikipedia/commons/4/4e/Sadhu_at_Vashista_Ashram.jpg">Link</a></li>
         <li>Money Bag Clip Art - <a href="http://simpleicon.com/wp-content/uploads/money-bag-2.svg">Link</a></li>
         <li>Human Clip Art - <a href="http://bl.ocks.org/alansmithy/d832fc03f6e6a91e99f4">Link</a></li>
+        <li>Colorbrewer - <a href="http://colorbrewer2.org/">Link</a></li>
         </ul>
         <h3>Data</h3>
         <ul>
@@ -260,7 +260,7 @@
         <p>This is a final project for Harvard CS171 - Spring 2015.<p>
     </div>
     <script>
-    	// Instantiate the slider
+    	// Instantiate the sliders
         $("#timeSlider").slider({
             range: "min",
             max: 2007,
@@ -296,14 +296,6 @@
             slide: function(d, i) {updateYear4()}
         });
 
-        // Set jumbotron to page height
-        $(document).ready(function(){
-           // $('#jumbo1').height($(window).height());
-            $('#jumbo2').height($(window).height());
-            $('#jumbo3').height($(window).height());
-            $('#jumbo4').height($(window).height());
-        });
-
         // variables keeping global knowledge of the data
         var countries_map;
         var power_ranks;
@@ -316,6 +308,7 @@
         var miltot;
         var milgdp;
 
+        // variables keeping globar knowledge of the visualizations
         var map_vis;
         var map_vis2;
         var bar_vis;
@@ -325,6 +318,7 @@
         var lineMidVis;
         var lineBotVis;
 
+        // Update years for the three slider-based visualizations
         function updateYear()
         {
             map_vis.wrangleData($("#timeSlider").slider("value"));
@@ -340,10 +334,12 @@
         function updateYear4()
         {
             d3.select("#timeRow4").text("Years: " + $("#timeSlider4").slider("values", 0) + " - " + $("#timeSlider4").slider("values", 1));
+            // Updates both the pictograms
             pict_vis.wrangleData($("#timeSlider4").slider("values", 0), $("#timeSlider4").slider("values", 1));
             pict_vis2.wrangleData($("#timeSlider4").slider("values", 0), $("#timeSlider4").slider("values", 1));
         }
 
+        // Runs the play buttons
         function playMapVis()
         {
             $("#timeSlider").slider("value", 1946);
@@ -356,6 +352,7 @@
             playRecursive2(2007 - 1946);
         }
 
+        // Uses recursion as a form of animation. x is used to limit the amount of recurstion
         function playRecursive(x)
         {
             if (x <= 0)
@@ -387,6 +384,7 @@
             {
                 var MyEventHandler = new Object();
 
+                // Creates all of the visualziations
                 map_vis = new MapVis(d3.select("#mapVis"), countries_map, power_ranks, blips_data, at_war, lat_long, MyEventHandler);
                 map_vis.updateVis();
                 map_vis2 = new MapVis2(d3.select("#mapVis2"), countries_map, power_ranks, blips_data, at_war, lat_long, allies, MyEventHandler);
@@ -400,11 +398,12 @@
                 lineMidVis = new LineVis(d3.select("#midVis"), milgdp, 0.4, 2, lat_long, MyEventHandler);
                 lineBotVis = new LineVis(d3.select("#botVis"), milirs, 1.55, 3, lat_long, MyEventHandler);
 
-                // bar_vis = new BarVis(d3.select("#barVis"), power_ranks, MyEventHandler)
+                // Updates the vizualizations dependent on sliders
                 updateYear();
                 updateYear2();
                 updateYear4();
 
+                // Use the event handler to update the coordinated views
                 $(MyEventHandler).bind("countryChanged", function(event, argument)
                 {
                     lineTopVis.onSelectionChange(argument);
@@ -431,8 +430,6 @@
                     milgdp = _milex_gdp;
                     milirs = _irst;
 
-                    console.log(milirs);
-
                     initVis();
                 }
                 else
@@ -442,6 +439,7 @@
                 }
             }
 
+            // Loads all of the various data files that we have
             var startHere = function()
             {
                 queue()
