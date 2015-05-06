@@ -114,13 +114,13 @@ MapVis2.prototype.wrangleData = function(_year)
     atwarthisyear.forEach(function(d, i) {
         var newcol = "yellow";
         if (d.kind == "entente")
-            newcol = "brown";
+            newcol = "#543005";
         else if (d.kind == "defense")
             newcol = "blue";
         else if (d.kind == "nonaggression")
-            newcol = "green";
+            newcol = "#e31a1c";
         else if (d.kind == "neutrality")
-            newcol = "yellow";
+            newcol = "#ff7f00";
         thatm.addLine(d.state_name1, d.state_name2, newcol, d.kind);
     });
 
@@ -257,64 +257,84 @@ MapVis2.prototype.updateVis = function()
     });
 
     // Make the legend
+    var legendCenter = 80;
+    var textCorrection = 15;
     this.svg.append("rect")
         .attr("x", 50)
-        .attr("y", thatm.height + 50)
+        .attr("y", thatm.height + legendCenter - 100)
+        .attr("height", 20)
+        .attr("width", 20)
+        .attr("fill", "#543005");
+    this.svg.append("rect")
+        .attr("x", 50)
+        .attr("y", thatm.height + legendCenter - 75)
+        .attr("height", 20)
+        .attr("width", 20)
+        .attr("fill", "blue");
+    this.svg.append("rect")
+        .attr("x", 50)
+        .attr("y", thatm.height + legendCenter - 50)
+        .attr("height", 20)
+        .attr("width", 20)
+        .attr("fill", "#e31a1c");
+    this.svg.append("rect")
+        .attr("x", 50)
+        .attr("y", thatm.height + legendCenter - 25)
+        .attr("height", 20)
+        .attr("width", 20)
+        .attr("fill", "#ff7f00");
+
+    this.svg.append("text")
+        .attr("x", 75)
+        .attr("y", thatm.height + legendCenter - 100 + textCorrection)
+        .attr("font-size", "16px")
+        .attr("fill", "#000000")
+        .text("Cordiality Agreement (Entente)");
+    this.svg.append("text")
+        .attr("x", 75)
+        .attr("y", thatm.height + legendCenter - 75 + textCorrection)
+        .attr("font-size", "16px")
+        .attr("fill", "#000000")
+        .text("Defense Pact");
+    this.svg.append("text")
+        .attr("x", 75)
+        .attr("y", thatm.height + legendCenter - 50 + textCorrection)
+        .attr("font-size", "16px")
+        .attr("fill", "#000000")
+        .text("Nonaggression Treaty");
+    this.svg.append("text")
+        .attr("x", 75)
+        .attr("y", thatm.height + legendCenter - 25 + textCorrection)
+        .attr("font-size", "16px")
+        .attr("fill", "#000000")
+        .text("Neutrality Agreement");
+
+    this.svg.append("rect")
+        .attr("x", 50)
+        .attr("y", thatm.height + legendCenter)
         .attr("height", 20)
         .attr("width", 200)
         .attr("fill", "url(#temperature-gradient-green)");
-    this.svg.append("rect")
-        .attr("x", 50)
-        .attr("y", thatm.height + 90)
-        .attr("height", 20)
-        .attr("width", 200)
-        .attr("fill", "url(#temperature-gradient-red)");
-    this.svg.append("text")
-        .attr("x", 40)
-        .attr("y", thatm.height + 45)
-        .attr("font-size", "16px")
-        .attr("fill", "#000000")
-        .text("Legend");
     this.svg.append("text")
         .attr("x", 50)
-        .attr("y", thatm.height + 65)
-        .attr("font-size", "16px")
-        .attr("fill", "#000000")
-        .text("0");
-    this.svg.append("text")
-        .attr("x", 50)
-        .attr("y", thatm.height + 105)
+        .attr("y", thatm.height + legendCenter + 15)
         .attr("font-size", "16px")
         .attr("fill", "#000000")
         .text("0");
     this.svg.append("text")
         .attr("x", 250)
-        .attr("y", thatm.height + 65)
-        .attr("font-size", "16px")
-        .attr("fill", "#ffffff")
-        .attr("text-anchor", "end")
-        .text("0.4");
-    this.svg.append("text")
-        .attr("x", 250)
-        .attr("y", thatm.height + 105)
+        .attr("y", thatm.height + legendCenter + 15)
         .attr("font-size", "16px")
         .attr("fill", "#ffffff")
         .attr("text-anchor", "end")
         .text("0.4");
     this.svg.append("text")
         .attr("x", 150)
-        .attr("y", thatm.height + 65)
+        .attr("y", thatm.height + legendCenter + 15)
         .attr("font-size", "16px")
         .attr("fill", "#000000")
         .attr("text-anchor", "middle")
-        .text("At Peace");
-    this.svg.append("text")
-        .attr("x", 150)
-        .attr("y", thatm.height + 105)
-        .attr("font-size", "16px")
-        .attr("fill", "#000000")
-        .attr("text-anchor", "middle")
-        .text("At War");
+        .text("Power Index");
 }
 
 MapVis2.prototype.addBlip = function(lat, lon, dat)

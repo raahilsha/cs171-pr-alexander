@@ -151,6 +151,23 @@ div.tooltip
 .line
 {
   fill: none;
-  stroke: steelblue;
+  stroke: gray;
   stroke-width: 1.5px;
+  stroke-opacity: .5;
+}
+
+.linee
+{
+  fill: none;
+  stroke: gray;
+  stroke-width: 1.5px;
+  stroke-opacity: .1;
+}
+
+.linehover
+{
+  fill: none;
+  stroke: steelblue;
+  stroke-width: 3px;
+  stroke-opacity: 1;
 }

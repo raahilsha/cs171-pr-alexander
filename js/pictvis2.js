@@ -28,7 +28,7 @@ PictVis2.prototype.initVis = function()
     this.wrangleData(this.year1, this.year2);
 
     this.svg = this.parentElement.append("svg")
-                                .attr("viewBox", "0 0 250 55")
+                                .attr("viewBox", "0 0 250 65")
 
     this.svg.append("defs")
             .append("g")
@@ -76,7 +76,25 @@ PictVis2.prototype.initVis = function()
             .attr("y", 40 + 5.5)
             .style("text-anchor", "left")
             .style("font-size", "5px")
-            .text(" = $" + Math.floor(thatp.moneyperpict / 1000000) / 1000 + " billion");
+            .text(" = $280 billion");
+            // .text(" = $" + Math.floor(thatp.moneyperpict / 1000000) / 1000 + " billion");
+    this.legend.append("use")
+            .attr("xlink:href","#iconCustom2")
+            .attr("x", 0)
+            .attr("y", 55)
+            .classed("iconSelectedMoney", true);
+    this.legend.append("rect")
+            .attr("x", 1)
+            .attr("y", 55)
+            .attr("width", 20)
+            .attr("height", 15)
+            .attr("fill", "white");
+    this.legend.append("text")
+            .attr("x", 7)
+            .attr("y", 55 + 5.5)
+            .style("text-anchor", "left")
+            .style("font-size", "5px")
+            .text(" = Cost of distributing a malaria net to everyone in danger of malaria");
 
 }
 

@@ -74,7 +74,8 @@ PictVis.prototype.initVis = function()
             .attr("y", 40 + 5.5)
             .style("text-anchor", "left")
             .style("font-size", "5px")
-            .text(" = " + Math.floor(thatp.peopleperpict) + " people");
+            .text(" = 100,000 people")
+            //.text(" = " + Math.floor(thatp.peopleperpict) + " people");
 
 }
 

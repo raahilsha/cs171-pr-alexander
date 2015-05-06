@@ -17,6 +17,9 @@ LineVis = function(_parentElement, _mydata, _maxVal, _type, _latlong, _eventHand
     this.margin = {top: 20, right: 50, bottom: 30, left: 50},
     this.width = getInnerWidth(this.parentElement) - this.margin.left - this.margin.right,
     this.height = 250 - this.margin.top - this.margin.bottom;
+    this.tooltip = this.parentElement.append("div").attr("class", "tooltip hidden");
+    this.offsetL = 30;
+    this.offsetT = -30;
 
     this.texts = [];
     this.bars = [];
@@ -72,17 +75,19 @@ LineVis.prototype.setupAxes = function()
           .attr("class", "y axis")
           .call(thatl.yAxis)
         .append("text")
-          .attr("transform", "rotate(-90)")
-          .attr("y", 6)
+          .attr("transform", "rotate(0)")
+          .attr("y",15)
+          .attr("x",5)
           .attr("dy", ".71em")
-          .style("text-anchor", "end")
+          .style("text-anchor", "begin")
+          .style("font-size", "16px")
           .text(function() {
                 if (thatl.mytype == 1)
-                    return "% Population";
+                    return "% Population in Military";
                 if (thatl.mytype == 2)
-                    return "% GDP";
+                    return "% GDP used for Military";
                 if (thatl.mytype == 3)
-                    return "Thousands of tons / person";
+                    return "Thousands of tons of Iron+Steel Production / Person*";
           });
 }
 
@@ -97,22 +102,35 @@ LineVis.prototype.drawLines = function()
                             .x(function(d) { return thatl.x(d.x); })
                             .y(function(d) { return thatl.y(d.y); });
 
+            thatl.svg.append("circle")
+                .attr("cx", thatl.x(thatl.mydata[0][na].x[0]))
+                .attr("cy", thatl.y(thatl.mydata[0][na].y[0]))
+                .attr("r", 3)
+                .attr("fill", "black");
+
             for (var i = 0; i < thatl.mydata[0][na].x.length - 1; i++)
             {
                 thatl.svg.append("line")
-                    .attr("class", "line")
+                    .attr("class", "linee")
                     .attr("x1", thatl.x(thatl.mydata[0][na].x[i]))
                     .attr("x2", thatl.x(thatl.mydata[0][na].x[i + 1]))
                     .attr("y1", thatl.y(thatl.mydata[0][na].y[i]))
                     .attr("y2", thatl.y(thatl.mydata[0][na].y[i + 1]))
+                    .attr("namee", na)
+
+                    .on("mousemove", function(d,i) {
+                        $(thatl.eventHandler).trigger("countryChanged", na);
+                        var mouse = d3.mouse(thatl.svg.node()).map(function(d) { return parseInt(d); });
+
+                        thatl.tooltip.classed("hidden", false)
+                            .attr("style", "left:"+(mouse[0]+thatl.offsetL)+"px;top:"+(mouse[1]+thatl.offsetT)+"px")
+                            .html(na);
+                    })
+                    .on("mouseout", function(d,i) {
+                        $(thatl.eventHandler).trigger("countryChanged", "NONE");
+                        thatl.tooltip.classed("hidden", true);
+                    })
             };
-
-            /* thatl.svg.append("path")
-                .datum(thatl.mydata[0][na])
-                .attr("class", "line")
-                .attr("d", line); */
-
-            console.log(thatl.mydata[0][na]);
         }
     });
 }
@@ -127,13 +145,6 @@ LineVis.prototype.wrangleData = function(_year)
  */
 LineVis.prototype.updateVis = function()
 {
-    thatb = this;
-
-    for (var i = 0; i < 20; i++)
-    {
-        this.texts[i].text(this.displayData[i].stateabb);
-        this.bars[i].transition().attr("width", 250 * this.displayData[i].cinc / 0.4)
-    }    
 }
 
 /**
@@ -144,6 +155,18 @@ LineVis.prototype.updateVis = function()
  */
 LineVis.prototype.onSelectionChange = function (_name)
 {
+    var thatl = this;
+    thatl.svg.selectAll(".linee")[0].forEach(function(d)
+    {
+        if (d3.select(d).attr("namee") == _name)
+        {
+            d3.select(d).classed("linehover", true);
+        }
+        else
+        {
+            d3.select(d).classed("linehover", false);
+        }
+    })
 }
 
 /**

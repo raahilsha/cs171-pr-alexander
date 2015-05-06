@@ -41,16 +41,16 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="#">Alexander: The <i>What If?</i> of War</a>
+          <a class="navbar-brand" href="#">Alexander and the <i>Gymnosophist</i></a>
         </div>
 
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-2">
           <ul class="nav navbar-nav">
             <li class="active"><a href="#">Home</a></li>
-            <li><a href="#viz1">Warfare</a></li>
-            <li><a href="#viz2">Peacefare</a></li>
-            <li><a href="#viz3">Resources</a></li>
-            <li><a href="#viz4">What If?</a></li>
+            <li><a href="#viz1">The War to End All Wars</a></li>
+            <li><a href="#viz3">Militarization</a></li>
+            <li><a href="#viz2">Progress</a></li>
+            <li><a href="#viz4">Losses of War</a></li>
           </ul>
           <ul class="nav navbar-nav navbar-right">
             <li><a href="https://github.com/raahilsha/cs171-pr-alexander/">Github</a></li>
@@ -64,9 +64,18 @@
     </div>
     <div class="container">
         <div class="jumbotron" id="jumbo1">
-              <h1>Alexander: The <i>What If?</i> of War</h1>
-              <p>This is a simple hero unit, a simple jumbotron-style component for calling extra attention to featured content or information.</p>
-              <p><a class="btn btn-primary btn-lg" href="#viz1">Learn more</a></p>
+              <h1>Alexander and the <i>Gymnosophist</i></h1>
+              <div style="width: 50%; margin: 0 auto; text-align: center"><h2>60 Years of Peace</h2></div>
+              <img src="alexander_circled.png" alt="Alexander" height="200" width="200"><img align="right" src="gymnosophist_circled.png" alt="Gymnosophist" height="200" width="200">
+              <p>“It took place, once, in 326 B.C. on the banks of a river called the Indus, now in Pakistan… Alexander, a young Macedonian, met there what he called a "gymnosophist," which means "the naked, wise man." We don't know who he was... Alexander asked, "What are you doing?" and the gymnosophist answered, "I'm experiencing nothingness." Then the gymnosophist asked, "What are you doing?" and Alexander said, "I am conquering the world." And they both laughed. Each one thought that the other was a fool. The gymnosophist said, "Why is he conquering the world? It's pointless."</p>
+              <p><a href="http://www.ted.com/talks/devdutt_pattanaik/transcript?language=en#t-204000">Devdutt Pattanaik</a></p>
+              <div><iframe width="1025" height="500" src="https://www.youtube.com/embed/vcCB3n6wdDI" frameborder="0" align="center" allowfullscreen></iframe></div>
+                <div class="row">
+                    <svg height="50"></svg>
+                </div>
+
+
+              <div style="width: 25%; margin: 0 auto;"><p>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp<a class="btn btn-success btn-lg" href="#viz1">&nbsp&nbsp&nbsp&nbsp&#x25bc&nbsp&nbsp&nbsp&nbsp</a></p></div>
         </div>
 
         <a name="viz1"></a>
@@ -74,10 +83,11 @@
         <div class="page-header">
             <div class="row">
                 <div class="col-lg-12">
-                  <h1 id="buttons">Warfare</h1>
+                  <h1 id="buttons">The War to End All Wars?</h1>
                 </div>
             </div>
         </div>
+        <p>World War II ended in 1946. Many, including US president Woodrow Wilson, hoped that this would be the last war that humanity would have to face. Let's see if this was actually the case. Press "Play" to step through history year by year. Hover over any feature to examine it in detail.</p>
 
         <div class="row">
             <div class="col-md-1"><p id="timeRow" style="position: relative; top: 75%; transform: translateY(-25%); font-size: 18px">Year:</p></div>
@@ -91,51 +101,31 @@
             <div class="col-md-6" id="mapVis">
             </div>
         </div>
-
-        <div class="jumbotron" id="jumbo2">
-              <h1>Introduction to the Conduct of Peace since WW2</h1>
-              <p>This is a simple hero unit, a simple jumbotron-style component for calling extra attention to featured content or information.</p>
-              <p><a class="btn btn-primary btn-lg" href="#viz2">Learn more</a></p>
-        </div>
-
-        <a name="viz2"></a>
-        <div class="row"><svg height="0"></svg></div>
-        <div class="page-header">
-            <div class="row">
-                <div class="col-lg-12">
-                  <h1 id="buttons">Peacefare</h1>
-                </div>
+        <div class="row">
+            <div class="col-md-6">
+                <p>Power Index: Part of the world's material capabilities accumulated in a particular country at the given time. It is calculated based on total and urban population, military expenditure and personal, iron and steel production and primary energy consumption. <a href="http://www.correlatesofwar.org/data-sets/national-material-capabilities">(Details Here)</a></p>
             </div>
-        </div>
-        <div class="row">
-            <div class="col-md-1"><p id="timeRow2" style="position: relative; top: 75%; transform: translateY(-25%); font-size: 18px">Year:</p></div>
-            <div class="col-md-10" id="timeSlider2"></div>
-            <button onclick="playMapVis2()" type="submit" class="btn btn-success">Play</button>
-        </div>
-        <div class="row">
-            <svg height="20"></svg>
-        </div>
-        <div class="row">
-            <div class="col-md-6" id="mapVis2">
+            <div class="col-md-6">
+                <p style="text-align: right">In the visualization above, countries engaged in warfare are highlighted in red. If there is a line connecting a country to another, it indicates that the two are at war. A country that is highlighted in red but with no line is undergoing some form of internal conflict. Starting 1989, data is present to allow one to identify individual battles on a global scale, represented by red circles.</p>
             </div>
         </div>
 
-
-        <div class="jumbotron" id="jumbo3">
-              <h1>How humans waste things</h1>
-              <p>This is a simple hero unit, a simple jumbotron-style component for calling extra attention to featured content or information.</p>
-              <p><a class="btn btn-primary btn-lg" href="#viz3">Learn more</a></p>
+        <div class="row">
+            <svg height="10"></svg>
         </div>
+        <div style="width: 25%; margin: 0 auto;"><p>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp<a class="btn btn-success btn-lg" href="#viz3">&nbsp&nbsp&nbsp&nbsp&#x25bc&nbsp&nbsp&nbsp&nbsp</a></p></div>
 
         <a name="viz3"></a>
         <div class="row"><svg height="0"></svg></div>
         <div class="page-header">
             <div class="row">
                 <div class="col-lg-12">
-                  <h1 id="buttons">Resources wasted on War</h1>
+                  <h1 id="buttons">Resources Wasted on War</h1>
                 </div>
             </div>
         </div>
+
+        <p>Since World War II, the proportion and volume of resources that the societies of the world spend on warfare has not declined, despite efforts by peacekeeping organizations to decrease it. The charts below contain information on the amount of resources countries use towards their military.</p>
 
         <div class="row">
             <div class="col-md-12" id="topVis">
@@ -149,22 +139,56 @@
             <div class="col-md-12" id="botVis">
             </div>
         </div>
-
-        <div class="jumbotron" id="jumbo4">
-              <h1>What could exist now</h1>
-              <p>This is a simple hero unit, a simple jumbotron-style component for calling extra attention to featured content or information.</p>
-              <p><a class="btn btn-primary btn-lg" href="#viz4">Learn more</a></p>
+        <div class="row">
+            <svg height="10"></svg>
         </div>
+        <div class="row">
+            <div class="col-md-6">
+            </div>
+            <div class="col-md-6">
+                <p style="text-align: right">* This is considered by some to be an important measure of a country's military development. (<a href="http://www.correlatesofwar.org/data-sets/national-material-capabilities">[1]</a>)</p>
+            </div>
+        </div>
+        <div style="width: 25%; margin: 0 auto;"><p>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp<a class="btn btn-success btn-lg" href="#viz2">&nbsp&nbsp&nbsp&nbsp&#x25bc&nbsp&nbsp&nbsp&nbsp</a></p></div>
+
+
+        <a name="viz2"></a>
+        <div class="row"><svg height="0"></svg></div>
+        <div class="page-header">
+            <div class="row">
+                <div class="col-lg-12">
+                  <h1 id="buttons">Progress</h1>
+                </div>
+            </div>
+        </div>
+        <p>Although war never truly ended in 1946 following WW2, some progress has been made regarding world peace. Let us explore international agreements that have been made since 1946. Press "Play" to step through history year by year. Hover over any feature to examine it in detail.</p>
+        <div class="row">
+            <div class="col-md-1"><p id="timeRow2" style="position: relative; top: 75%; transform: translateY(-25%); font-size: 18px">Year:</p></div>
+            <div class="col-md-10" id="timeSlider2"></div>
+            <button onclick="playMapVis2()" type="submit" class="btn btn-success">Play</button>
+        </div>
+        <div class="row">
+            <svg height="20"></svg>
+        </div>
+        <div class="row">
+            <div class="col-md-6" id="mapVis2">
+            </div>
+        </div>
+        <div class="row">
+            <svg height="10"></svg>
+        </div>
+        <div style="width: 25%; margin: 0 auto;"><p>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp<a class="btn btn-success btn-lg" href="#viz4">&nbsp&nbsp&nbsp&nbsp&#x25bc&nbsp&nbsp&nbsp&nbsp</a></p></div>
 
         <a name="viz4"></a>
         <div class="row"><svg height="0"></svg></div>
         <div class="page-header">
             <div class="row">
                 <div class="col-lg-12">
-                  <h1 id="buttons">The Savings of Peace</h1>
+                  <h1 id="buttons">The Losses of War</h1>
                 </div>
             </div>
         </div>
+        <p>But what if World War II were actually the world's last war? Below is a pictogram showing how many lives could have been saved and much money could have been used for better causes. For example, malaria nets could have been distributed 900 times over to everyone in danger of malaria with all the money spent in military expenditures after World War II. (<a href="http://www.givewell.org/international/top-charities/AMF">[2]</a>)</p>
         <div class="row">
             <div class="col-md-2"><p id="timeRow4" style="position: relative; top: 75%; transform: translateY(-25%); font-size: 18px">Year:</p></div>
             <div class="col-md-9" id="timeSlider4"></div>
@@ -177,9 +201,16 @@
             <div class="col-md-12" id="pictVis2">
             </div>
         </div>
-        <div class="row">
-            <svg height="500"></svg>
+        
+        <div class="row"><svg height="0"></svg></div>
+        <div class="page-header">
+            <div class="row">
+                <div class="col-lg-12">
+                  <h1 id="buttons">Credits</h1>
+                </div>
+            </div>
         </div>
+        Grigory Khimulya - <a href="">Link</a>
     </div>
     <script>
     	// Instantiate the slider
@@ -220,7 +251,7 @@
 
         // Set jumbotron to page height
         $(document).ready(function(){
-            $('#jumbo1').height($(window).height());
+           // $('#jumbo1').height($(window).height());
             $('#jumbo2').height($(window).height());
             $('#jumbo3').height($(window).height());
             $('#jumbo4').height($(window).height());
